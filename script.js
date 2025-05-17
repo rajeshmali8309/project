@@ -864,8 +864,6 @@ $(document).ready(function () {
                 }
                 
                 // button change Follow/Unfollow
-                let btn = 
-
 
                 // let icon = likeBtn.find('i');
                 // if (response.liked) {
