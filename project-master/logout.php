@@ -1,0 +1,9 @@
+<?php 
+session_start();
+if(isset($_SESSION["userid"])){
+    unset($_SESSION['userid']);
+    unset($_SESSION['login_user_id']);
+    unset($_SESSION['firstchr']);
+    header("location:signup.php");
+}
+?>

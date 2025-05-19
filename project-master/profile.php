@@ -40,6 +40,7 @@ if(isset($_SESSION["userid"])){ ?>
         #search {
             width: 99%;
         }
+
     </style>
 </head>
 <body>

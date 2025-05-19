@@ -1,0 +1,224 @@
+<?php 
+session_start();
+if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
+<html lang="en">
+<head>
+    <?php
+    // include file of head section items 
+    include 'layout/header.php';
+    ?>
+    <title>Profile/ X</title>
+    <style>
+        .user-profile-info h3 {
+            color: black;
+            margin-top: 5px;
+        }
+        .text-pink{
+            color: rgb(231, 14, 50);
+        }
+        .post-reactions a{
+            text-decoration: none;
+        }
+        .post {
+            width: 663px;
+        }
+        .rightbar{
+            margin-right: 28px;
+            right: -17px;
+        }
+        .profile-center-header{
+            margin-left: 45px;
+            width: 48.2%;
+        }
+
+        #search {
+            width: 99%;
+        }
+
+        .other-user-links-active{
+            border-bottom: 4px solid rgb(34, 154, 252);
+            border-radius: 2px;
+            text-decoration: none;
+            background-color: rgb(220, 221, 221);
+            color: rgb(7, 7, 7) !important;
+            cursor: pointer;
+        }
+
+        .first_char {
+            padding: 7px 28px;
+        }
+
+        #profile-dp-show {
+            padding: 6px 9px;
+            height: 112px;
+        }
+
+        .other-follow-btn {
+            margin-left: 400px;
+            padding: 3px 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="pagecontainer" id="show-user-profile">
+        <?php
+        include 'dbconnection.php';
+        // include file of left-sidebar 
+        include 'layout/left-sidebar.php';
+
+        // fetch other user Data
+        $OtherUsername = $_REQUEST['username'];
+        $find_user_info_query = "SELECT * FROM `twitter_users` WHERE username = '$OtherUsername'";
+        $result = mysqli_query($conn,$find_user_info_query);
+        $userDAta = mysqli_fetch_assoc($result);
+        $User_name = $userDAta['name'];
+        $Userfirstchar = $User_name[0];
+
+        // Other user following followers count
+        $userId = $userDAta['id']; //Other user Id
+        //following Count 
+        $Count_query = "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId";
+        $followingCount = mysqli_query($conn, $Count_query);
+        $following = mysqli_fetch_assoc($followingCount);
+
+        //followers Count
+        $followrs_query = "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $userId";
+        $followersCount = mysqli_query($conn, $followrs_query);
+        $followers = mysqli_fetch_assoc($followersCount);
+
+        //total post count
+        $post_query = "SELECT COUNT(*) AS total FROM twitter_posts WHERE user_id = $userId";
+        $PostCount = mysqli_query($conn, $post_query);
+        $postResult = mysqli_fetch_assoc($PostCount);
+        ?>
+
+        <div class="center-main" style="margin: 0 497px 0 280px;">
+            <div class="profile-center-header">
+                <div class="profile-head"><span id=""><?php echo $userDAta['name'];?> <br> <span class="profile-post-all-count"><?php echo $postResult['total']?> posts</span></span></div>
+
+                <div class="search-box" style="margin-left: 670px;">
+                    <input type="text" placeholder="🔍︎ Search" id="search">
+                </div>
+            </div>
+
+            <div class="center-content" style="padding-top: 56px;">
+                <div class="user-profile-show">
+                    <div class="profile-cover-picture">
+                        <?php
+                        if(!empty($userDAta['cover_picture'])){ ?>
+                            <img src="profile_banner/<?php echo $userDAta['cover_picture'];?>" alt="No backgroung Cover" width="100%" height="100%">
+                            <?php }
+                            ?>
+                    </div>
+                </div>
+            
+                <div class="post" id="profile-dp-show">
+                    <!-- <span class="first_char">R</span> -->
+                    <?php if(empty($userDAta['profile_picture'])){ ?>
+                        <span class="first_char"><?php echo $Userfirstchar?></span>
+                    <?php }else{
+                        ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" id="profile-dp-show" alt="no file"><?php
+                    }?>
+                    <button class="other-follow-btn"><span>Follow</span></button>
+                    <div class="user-profile-info">
+                        <h3><?php echo $userDAta['name'];?></h3>
+                        <input id="other-userid" type="hidden" value="<?php echo $userDAta['id'];?>">
+                        <p>@<?php echo $userDAta['username'];?></p>
+                        <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
+                        <p><?php echo $userDAta['bio'];?></p>
+                        <p class="show-profile-followers">
+                            <span class="other-follower"><b><?php echo $following['total'];?></b></span><span> Following</span>
+                            <span class="other-follower" style="margin-left: 10px;"><b><?php echo $followers['total'];?></b></span><span> Follower</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="other-profile-links-btn">
+                    <a id="other-posts" class="other-user-links-active">Posts</a>
+                    <a id="other-media">Media</a>
+                </div>
+                <!-- show post data -->
+                <div class="post" id="show-other-Userdata" style="padding: 0"></div>
+                <!-- End show post data -->
+            </div>
+        </div>
+
+        <div class="rightbar">
+            <div class="might-like">
+                <h3>You might like</h3>
+                <!-- you might like show 3 user using limit -->
+                <?php
+                $useridd = $_SESSION['login_user_id'];
+
+                $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
+                AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')";
+
+                $users_result = mysqli_query($conn, $all_users);
+                    while($userinfo = $users_result->fetch_assoc()) {
+                            $user_name = $userinfo['name'];
+                            $userfirstchar = $user_name[0];
+                        ?>
+                        <div class="users-might">
+                            <?php
+                            if(empty($userinfo['profile_picture'])){
+                                ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
+                            }else{
+                                ?> <div><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></div> <?php
+                            }
+                            ?>                        
+                            <div style="margin-left: 10px;">
+                                <div style="color:black; font-size: 18px;"><strong><?php echo $userinfo['name']?></strong></div>
+                                <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
+                            </div>
+                            <div class="might-follow-users">
+                                <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
+                            </div>
+                        </div>
+                    <?php }
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <?php include 'layout/post_model.php'; ?>
+    <?php include 'layout/add_comment_model.php'; ?>
+</body>
+<script>
+    $(document).ready(function () {
+        // start other profile page fetch Data using ajax
+        function otherProfileData(getId) {
+            $("#other-posts,#other-media").removeClass("other-user-links-active");
+            if(!getId== ''){
+                var user_id = $("#other-userid").val();
+                $("#"+getId).addClass("other-user-links-active");
+                console.log(user_id);
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "other_Profile_page": getId,
+                        "other_user_id":user_id
+                    },
+                    success : function(response){
+                        $("#show-other-Userdata").html(response);
+                    }
+                });
+            }
+        }
+
+        otherProfileData("other-posts");
+
+        $(document).on("click", "#other-posts", function(){
+            otherProfileData("other-posts");
+        });
+
+        $(document).on("click", "#other-media", function(){
+            otherProfileData("other-media");
+        });
+    });
+</script>
+</html>
+<?php }else{
+    header("location:profile.php");
+}
+?>

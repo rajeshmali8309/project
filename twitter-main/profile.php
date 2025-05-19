@@ -25,21 +25,7 @@ if(isset($_SESSION["userid"])){ ?>
         .post-reactions a{
             text-decoration: none;
         }
-        .post {
-            width: 663px;
-        }
-        .rightbar{
-            margin-right: 28px;
-            right: -17px;
-        }
-        .profile-center-header{
-            margin-left: 45px;
-            width: 48.2%;
-        }
 
-        #search {
-            width: 99%;
-        }
     </style>
 </head>
 <body>
@@ -53,8 +39,8 @@ if(isset($_SESSION["userid"])){ ?>
     <div class="pagecontainer" id="show-user-profile">
     </div>
 
-    <?php include 'layout/post_model.php'; ?>
-    <?php include 'layout/add_comment_model.php'; ?>
+    <?php include 'layout/post_model.php';
+    ?>
 </body>
 <script>
     
@@ -125,21 +111,9 @@ if(isset($_SESSION["userid"])){ ?>
     });
 
     function updateCharCount() {
-        var bio = document.getElementById('bio');
-        var count = document.getElementById('charCount');
+        const bio = document.getElementById('bio');
+        const count = document.getElementById('charCount');
         count.textContent = `${bio.value.length} / 160`;
-    }
-
-    function NameCharCount() {
-        var name = document.getElementById('countName');
-        var count = document.getElementById('namecount');
-        count.textContent = `${name.value.length} / 20`;
-    }
-
-    function UsernameCharCount() {
-        var bio = document.getElementById('countUsername');
-        var count = document.getElementById('usernamecount');
-        count.textContent = `${bio.value.length} / 15`;
     }
 </script>
 </html>
