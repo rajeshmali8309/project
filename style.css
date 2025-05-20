@@ -1236,6 +1236,10 @@
     margin-bottom: 20px;
 }
 
+.might-like a{
+    color: black;
+}
+
 .might-like img{
     border-radius: 50%;
     padding: 3px;
@@ -1672,22 +1676,6 @@
     cursor: pointer;
     color: blue;
 }
-/* Hide scrollbar */
-.user-list-popup::-webkit-scrollbar {
-    display: none;
-}
-
-.popup-header-follow{
-    padding: 10px;
-    margin-bottom: 15px;
-    font-weight: bold;
-    font-size: 18px;
-    border-bottom: 1px solid #ddd;
-    background-color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
 
 .popup-label {
     font-weight: normal;
@@ -1699,15 +1687,33 @@
 .user-item {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-left: 73px;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgb(241, 239, 239);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 625px;
+    margin-top: 0px;
 }
 
-.user-dp {
+.user-dp-img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 12px;
+}
+
+.user-dp {
+    padding: 10px 17px 10px 17px;
+    font-size: 22px;
+    color: white;
+    font-weight: 500;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    background-color: rgb(247, 115, 7);
 }
 
 .user-info {
@@ -1800,4 +1806,63 @@
 
 .other-follow-btn:hover{
     background-color: rgb(53, 52, 52);
+}
+
+/* show following/followers list */
+.following-list-active{
+    border-bottom: 4px solid rgb(34, 154, 252);
+    border-bottom-width: 5px !important;
+    border-radius: 5%;
+    color: black !important;
+    padding-bottom: 10px !important;
+    font-weight: 700;
+}
+
+.followers-list {
+    width: 50%;
+    text-align: center;
+    padding: 15px;
+    font-weight: 500;
+    color: rgb(103, 114, 124);
+}
+
+.followers-list:hover {
+    background-color: rgb(221, 220, 220);
+    cursor: pointer;
+}
+
+.Following-list {
+    width: 50%;
+    text-align: center;
+    padding: 15px;
+    font-weight: 500;
+    color: rgb(103, 114, 124);
+}
+
+.Following-list:hover {
+    background-color: rgb(221, 220, 220);
+    cursor: pointer;
+}
+
+.who-user-info{
+   margin: 0px 55px;
+}
+
+.who-user-info p{
+    margin: -5;
+    margin-top: 5px;
+    padding: 0;
+}
+
+.who-user-info a{
+    font-size: 15px;
+    color: rgb(85, 84, 84);
+    font-weight: 400;
+    padding: 0px 20px 0px 0px;
+    cursor: pointer;
+}
+
+.who-user-info a:hover{
+    text-decoration: none;
+    color: rgb(85, 84, 84);
 }

@@ -39,11 +39,17 @@ if(isset($_SESSION["userid"])){ ?>
         ?>
         <?php
         if(isset($_REQUEST['followers'])){
-            $Username = $_REQUEST['followers'];
+            $Username = $_REQUEST['followers']; 
+            ?> 
+            <input type="hidden" class="pagedata" value="followers">
+            <?php
         }
 
         if(isset($_REQUEST['following'])){
             $Username = $_REQUEST['following'];
+            ?> 
+            <input type="hidden" class="pagedata" value="following">
+            <?php
         }
 
         // find user information
@@ -51,49 +57,23 @@ if(isset($_SESSION["userid"])){ ?>
         $user_result = mysqli_query($conn,$userInfo_query);
         $user_data = mysqli_fetch_assoc($user_result);
 
-        $userID = $user_data['id'];
-        // find following users data
-        $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
-                                        FROM twitter_followers tf
-                                        JOIN twitter_users u ON tf.followers = u.id
-                                        WHERE tf.following = $userID";
-
-        $following_result = mysqli_query($conn, $followingUsersQuery);
-
         ?>
         <div class="center-main" style="margin: 0 497px 0 280px;">
             <div class="center-header">
                 <div class="who-user-info">
+                <input type="hidden" class="user-name-value" value="<?php echo $user_data['id'];?>">
                 <p><?php echo $user_data['name'];?></p>
                 <a>@<?php echo $Username;?></a>
             </div>
-                <div class="followers-list"><span id="for_active">Followers</span></div>
-                <div class="Following-list"><span id="following" class="following-list-active"> Followings</span></div>
+                <div class="followers-list"><span id="followers-active">Followers</span></div>
+                <div class="following-list"><span id="following-active"> Followings</span></div>
                 <div class="search-box">
                   <input type="text" placeholder="🔍︎ Search" id="search">
                 </div>
             </div>
 
             <!-- following user details -->
-            <div class="center-content" style="padding-top: 56px;">
-                <?php 
-                while($user = mysqli_fetch_assoc($following_result)){
-                    $firstChar = strtoupper(substr($user['name'], 0, 1)); ?>
-                    <div class="user-item">
-                        <?php 
-                         if(!empty($user['profile_picture'])){ ?>
-                            <img src="profile_pic/<?php echo $user['profile_picture'];?>" class="user-dp-img" alt="User DP">
-                        <?php } else { ?>
-                            <span class="user-dp"><?php echo $firstChar;?></span>
-                        <?php }
-                        ?>
-                        <div class="user-info">
-                            <div class="user-name"><?php echo $user['name'];?></div>
-                            <div class="user-username">@<?php echo $user['username'];?></div>
-                        </div>
-                        <button class="follow-btn-list">Follow</button>
-                    </div>
-                <?php } ?>
+            <div class="center-content" style="padding-top: 56px;">                
             </div>
         </div>
 
@@ -136,6 +116,53 @@ if(isset($_SESSION["userid"])){ ?>
     <?php include 'layout/post_model.php'; ?>
 </body>
 <script>
+    function userFollowing(value){
+        var username = $(".user-name-value").val();
+        if(value === 'following'){
+            $("#followers-active").removeClass('following-list-active')
+            $("#following-active").addClass('following-list-active');
+            $.ajax({
+                url: "controller.php",
+                type: 'post',
+                data: {
+                    "following_users": value,
+                    "userid":username
+                },
+                success : function(response){
+                    $(".center-content").html(response);
+                }
+            });
+        }
+
+        if(value === 'followers'){
+            $("#followers-active").addClass('following-list-active')
+            $("#following-active").removeClass('following-list-active');
+            $.ajax({
+                url: "controller.php",
+                type: 'post',
+                data: {
+                    "followers_users": value,
+                    "userid":username
+                },
+                success : function(response){
+                    $(".center-content").html(response);
+                }
+            });
+        }
+    }
+
+    let pageval = $(".pagedata").val();
+    userFollowing(pageval);
+
+    // Click on following
+    $(document).on('click', '.following-list', function () {
+       userFollowing('following');
+    });
+
+    // Click on followers
+    $(document).on('click', '.followers-list', function () {
+       userFollowing('followers');
+    });
 </script>
 </html>
 <?php }else{

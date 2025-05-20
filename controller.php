@@ -343,8 +343,9 @@ if (isset($_REQUEST['Profilepage'])) {
 
                     <?php 
                     $myfile = $post['post_file'];
-                    if(!empty($post['post_file'])){
-                        if(strtolower(end(explode(".",$myfile))) =="mp4") {
+                    if (!empty($myfile)) {
+                        $ext = explode(".", $myfile);
+                        if (strtolower(end($ext)) == "mp4") {
                             ?> 
                             <div class="post-img">
                                 <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
@@ -391,12 +392,6 @@ if (isset($_REQUEST['Profilepage'])) {
                 </div>
                 <?php
             }
-        }else{
-            ?>
-            <div class="highlight-show-Data">
-                <h3>No any post on your profile</h3>
-            </div>
-            <?php
         }
     }
 
@@ -438,7 +433,13 @@ if (isset($_REQUEST['Profilepage'])) {
             <div>
                 <?php
                 while ($media_post = $media_result->fetch_assoc()){
-                    ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                       $myfile = $media_post['post_file'];
+                        if (!empty($myfile)) {
+                            $ext = explode(".", $myfile);
+                            if (strtolower(end($ext)) == "mp4") { }else{
+                                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                            }
+                        }
                 }
                 ?>
             </div>
@@ -552,13 +553,13 @@ if(isset($_REQUEST['users_show_limits'])){
                 <div class="users-might">
                     <?php
                         if(empty($userinfo['profile_picture'])){
-                        ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
+                        ?> <div class="profile-avatar"><span><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userfirstchar; ?></a></span></div> <?php
                         }else{
-                        ?> <div><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></div> <?php
+                        ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
                         }
                     ?>                        
                     <div style="margin-left: 10px;">
-                        <div style="color:black; font-size: 18px;"><strong><?php echo $userinfo['name']?></strong></div>
+                        <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userinfo['name']?></a></strong></div>
                         <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
                     </div>
                     <div class="might-follow-users">
@@ -633,8 +634,8 @@ if (isset($_REQUEST['profile_page_record'])){
                     <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
                     <p><?php echo $userDAta['bio'];?></p>
                     <p class="show-profile-followers">
-                        <span class="following-show"><b><?php echo $following['total'];?></b></span><span> Following</span>
-                        <span class="followers-show"><b><?php echo $followers['total'];?></b></span><span> Follower</span>
+                        <a style="color: black;" href="follow_list.php?following=<?php echo $userDAta['username']?>"><span class="following-show"><b><?php echo $following['total'];?></b></span><span> Following</span></a>
+                        <a style="color: black;" href="follow_list.php?followers=<?php echo $userDAta['username']?>"><span class="followers-show"><b><?php echo $followers['total'];?></b></span><span> Follower</span></a>
                     </p>
                     </div>
             </div>
@@ -704,11 +705,11 @@ if (isset($_REQUEST['profile_page_record'])){
                          if(empty($userinfo['profile_picture'])){
                             ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
                          }else{
-                            ?> <div><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></div> <?php
+                            ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
                          }
                         ?>                        
                         <div style="margin-left: 10px;">
-                            <div style="color:black; font-size: 18px;"><strong><?php echo $userinfo['name']?></strong></div>
+                            <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userinfo['name']?></a></strong></div>
                             <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
                         </div>
                         <div class="might-follow-users">
@@ -979,8 +980,9 @@ if (isset($_REQUEST['other_Profile_page'])) {
 
                     <?php 
                     $myfile = $post['post_file'];
-                    if(!empty($post['post_file'])){
-                        if(strtolower(end(explode(".",$myfile))) =="mp4") {
+                    if (!empty($myfile)) {
+                        $ext = explode(".", $myfile);
+                        if (strtolower(end($ext)) == "mp4") {
                             ?> 
                             <div class="post-img">
                                 <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
@@ -1038,12 +1040,49 @@ if (isset($_REQUEST['other_Profile_page'])) {
             <div>
                 <?php
                 while ($media_post = $media_result->fetch_assoc()){
-                    ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                       $myfile = $media_post['post_file'];
+                        if (!empty($myfile)) {
+                            $ext = explode(".", $myfile);
+                            if (strtolower(end($ext)) == "mp4") { }else{
+                                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                            }
+                        }
                 }
                 ?>
             </div>
             <?php
        }
     }
+}
+
+// any user show following list
+if(isset($_REQUEST['following_users'])){
+    $userID = isset($_POST['userid']) ? $_POST['userid'] : "";
+    $loginUserid = $_SESSION['login_user_id'];
+
+    // find following users data
+    $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
+                                    FROM twitter_followers tf
+                                    JOIN twitter_users u ON tf.followers = u.id
+                                    WHERE tf.following = $userID";
+
+    $following_result = mysqli_query($conn, $followingUsersQuery);
+    include 'layout/followers_info.php';
+}
+
+
+// any user show following list
+if(isset($_REQUEST['followers_users'])){
+    $userID = isset($_POST['userid']) ? $_POST['userid'] : "";
+    $loginUserid = $_SESSION['login_user_id'];
+
+    // find following users data
+    $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
+                                    FROM twitter_followers tf
+                                    JOIN twitter_users u ON tf.following = u.id
+                                    WHERE tf.followers = $userID";
+
+    $following_result = mysqli_query($conn, $followingUsersQuery);
+    include 'layout/followers_info.php';    
 }
 ?>

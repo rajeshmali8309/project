@@ -39,7 +39,6 @@ if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
             border-bottom: 4px solid rgb(34, 154, 252);
             border-radius: 2px;
             text-decoration: none;
-            background-color: rgb(220, 221, 221);
             color: rgb(7, 7, 7) !important;
             cursor: pointer;
         }
@@ -76,7 +75,7 @@ if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
 
         // Other user following followers count
         $userId = $userDAta['id']; //Other user Id
-        //following Count 
+        //following Count
         $Count_query = "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId";
         $followingCount = mysqli_query($conn, $Count_query);
         $following = mysqli_fetch_assoc($followingCount);
@@ -127,8 +126,8 @@ if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
                         <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
                         <p><?php echo $userDAta['bio'];?></p>
                         <p class="show-profile-followers">
-                            <span class="other-follower"><b><?php echo $following['total'];?></b></span><span> Following</span>
-                            <span class="other-follower" style="margin-left: 10px;"><b><?php echo $followers['total'];?></b></span><span> Follower</span>
+                            <a style="color: black;" href="follow_list.php?following=<?php echo $userDAta['username']?>"><span class="following-show"><b><?php echo $following['total'];?></b></span><span> Following</span></a>
+                            <a style="color: black;" href="follow_list.php?followers=<?php echo $userDAta['username']?>"><span class="followers-show"style="margin-left: 10px;"><b><?php echo $followers['total'];?></b></span><span> Follower</span></a>
                         </p>
                     </div>
                 </div>
@@ -161,13 +160,13 @@ if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
                         <div class="users-might">
                             <?php
                             if(empty($userinfo['profile_picture'])){
-                                ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
+                                ?> <div class="profile-avatar"><span><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userfirstchar; ?></a></span></div> <?php
                             }else{
-                                ?> <div><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></div> <?php
+                                ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
                             }
-                            ?>                        
+                            ?>
                             <div style="margin-left: 10px;">
-                                <div style="color:black; font-size: 18px;"><strong><?php echo $userinfo['name']?></strong></div>
+                                <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userinfo['name']?></a></strong></div>
                                 <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
                             </div>
                             <div class="might-follow-users">
@@ -191,7 +190,6 @@ if(isset($_SESSION["userid"]) && isset($_REQUEST['username'])){ ?>
             if(!getId== ''){
                 var user_id = $("#other-userid").val();
                 $("#"+getId).addClass("other-user-links-active");
-                console.log(user_id);
                 $.ajax({
                     url: "controller.php",
                     type: 'post',
