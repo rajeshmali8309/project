@@ -542,6 +542,10 @@ $(document).ready(function () {
                 $(".edit-user" + inputID).text("");
             }
         });
+
+        $(document).on("change", ".file_banner", function(){
+            $(".fileerror").text("");
+        });
     });
 
     $(document).on("click", ".close-edit-form", function () {
@@ -555,6 +559,7 @@ $(document).ready(function () {
         var namepattern = /^[A-Za-z ]{3,20}$/;
         var usernamepattern = /^[a-z0-9_.]{5,15}$/;
         var emailpattern = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,6}$/;
+        let filePatter = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
         var isValid = true;
 
         if ($(".Name").val() === '') {
@@ -642,6 +647,16 @@ $(document).ready(function () {
             }
         }
 
+        if ($(".file_banner").val() != '') {
+            thisValue = $(".file_banner").val();
+            if (filePatter.test(thisValue)) {
+                $(".fileerror").text("");
+            }else{
+                isValid = false;
+                $(".fileerror").text("please choose a valid file...!");
+            }
+        }
+
         if ($(".DOB").val() === '') {
             $(".edit-userDOB").text("DOB is Require");
             $(".edit-userDOB").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
@@ -680,28 +695,77 @@ $(document).ready(function () {
 
     // Open post-btn model 
     $(document).on("click", ".post-btn", function () {
-        $(".left-post-form")[0].reset();
+        $(".popup-post-form")[0].reset();
         $(".left-post-discription").text("");
         $("#post-modal-overlay").fadeIn(300);
     });
 
     $(document).on("click", ".close-post-modal", function () {
-        $(".left-post-form")[0].reset();
-        $("#charCountpost").text("");
+        $(".popup-post-form")[0].reset();
+        $("#leftcharCountpost").text("");
         $("#post-modal-overlay").fadeOut(300);
     });
 
+    $(".popup-post-discription").focus(function(){
+            $(".errorpost").text("");
+    });
+
+    $(".popup-post-file").change(function(){
+            $(".errorpost").text("");
+    })
+
     // Post validation & Post Insert...
-    $(".left-post-form").submit(function (event) {
+    $(document).on("submit", ".popup-post-form", function (event) {
+        event.preventDefault();
+        var isValid = true;
+
+        if ($(".popup-post-discription").val() === '' && $(".popup-post-file").val() === '') {
+            $(".errorpost").text("Your Post is Empty...!");
+            $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+            isValid = false;
+        } else {
+            $(".errorpost").text("");
+        }
+
+        if (isValid) {
+            var form = $('.popup-post-form')[0];
+            var formData = new FormData(form);
+            formData.append('user_post_insert', 'formData');
+            $.ajax({
+                url: "controller.php",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (insertpost) {
+                    event.preventDefault();
+                    setTimeout(function () {
+                        $('.post-success-msg').html(insertpost);
+                    }, 300);
+
+                    setTimeout(function () {
+                        $('.post-success-msg').html("");
+                        $(".popup-post-form")[0].reset();
+                        $("#charCountpost").text("");
+                        $("#post-modal-overlay").fadeOut(300);
+                        profilepage();
+                    }, 1500);
+                }
+            });
+        }
+    });
+
+    // Post validation & Post Insert...
+    $(document).on("submit", ".left-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
 
         if ($(".left-post-discription").val() === '' && $(".left-post-file").val() === '') {
-            $("#errorPost").text("Your Post is Empty...!");
-            $("#errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+            $(".errorPost").text("Your Post is Empty...!");
+            $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
         } else {
-            $("#errorPost").text("");
+            $(".errorPost").text("");
         }
 
         if (isValid) {
@@ -715,6 +779,7 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (insertpost) {
+                    event.preventDefault();
                     setTimeout(function () {
                         $('.success-msg').html(insertpost);
                     }, 300);
@@ -723,7 +788,6 @@ $(document).ready(function () {
                         $('.success-msg').html("");
                         $(".left-post-form")[0].reset();
                         $("#charCountpost").text("");
-                        $("#post-modal-overlay").fadeOut(300);
                         profilepage();
                     }, 1500);
                 }
@@ -770,6 +834,7 @@ $(document).ready(function () {
     $(document).on('click', '.comment-post', function (e) {
         e.preventDefault();
         $("#cmt-form")[0].reset();
+        $("#Countcomment-length").text("");
         $(".left-post-discription").text("");
         $("#post-comment-modal-overlay").fadeIn(300);
         var post_id = $(this).data('post-id');
@@ -781,6 +846,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#left-comment-btn', function (e) {
+        $("#Countcomment-length").text("");
         e.preventDefault();
         var post_Id = $("#comment-post-id").val();
         var comment_val = $("#post_comment").val();
@@ -907,12 +973,18 @@ $(document).ready(function () {
 });
 
 function postCharCount() {
-    var posttext = document.getElementById('post_description_left');
-    var count = document.getElementById('charCountpost');
+    var posttext = document.getElementById('popup_post_description');
+    var count = document.getElementById('leftcharCountpost');
     count.textContent = `${posttext.value.length} / 240`;
 }
 
-function postCharCount() {
+function postdecCount() {
+    var posttext = document.getElementById('index-post_description');
+    var count = document.getElementById('charcount');
+    count.textContent = `${posttext.value.length} / 240`;
+}
+
+function commentCharCount() {
     var posttext = document.getElementById('post_comment');
     var count = document.getElementById('Countcomment-length');
     count.textContent = `${posttext.value.length} / 100`;

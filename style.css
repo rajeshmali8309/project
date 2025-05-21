@@ -656,10 +656,6 @@
     text-decoration: none;
 }
 
-#image{
-    display: none;
-}
-
 .image{
     cursor: pointer;
 }
@@ -1015,7 +1011,7 @@
 
 .first_char{
     background-color: rgb(247, 115, 7);
-    padding: 30px 42px;
+    padding: 15px 33px 15px 33px;
     border-radius: 50%;
     font-size: 50px;
     color: white;
@@ -1415,6 +1411,24 @@
     color: white;
 }
 
+.remove-banner {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: Black;
+}
+
+.fileerror{
+    position: absolute;
+    top: 20%;
+    left: 51%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: red;
+}
+
 .form-group {
     padding: 0 20px 16px;
 }
@@ -1510,12 +1524,26 @@
     color: green;
 }
 
+.post-success-msg{
+    color: green;
+}
+
 .user-post-time{
     font-size: 18px;
     color: rgb(65, 61, 61);
 }
 
 #charCountpost{
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+#charcount{
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+#leftcharCountpost{
     margin-top: 20px;
     margin-left: 30px;
 }

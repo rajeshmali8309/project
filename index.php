@@ -8,6 +8,32 @@ if(isset($_SESSION["userid"])){ ?>
     include 'layout/header.php';
     ?>
     <title>Home / X</title>
+    <style>
+        .rightbar{
+            margin-right: 58px;
+            right: -17px;
+        }
+        .profile-center-header{
+            margin-left: 45px;
+            width: 48.2%;
+        }
+        .post {
+            width: 632px;
+        }
+        .post-options button {
+            margin-left: 118px;
+        }
+
+        .text-pink{
+            color: rgb(231, 14, 50);
+        }
+        .post-reactions a{
+            text-decoration: none;
+        }
+        .post-reactions {
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="pagecontainer">
@@ -34,18 +60,13 @@ if(isset($_SESSION["userid"])){ ?>
         </div>
 
         <div class="rightbar">
-            <div class="subscribe">
-                <h3>Subscribe to Premium</h3>
-                <p>Subscribe to unlock new features and if eligible, receive a share of revenue.</p>
-                <button id="subscribe-btn">Subscribe</button>
-            </div>
-            <?php
-                // include file of right-footer 
-                include 'layout/footer.php';
+            <?php 
+              include 'layout/right_footer.php'; 
             ?>
         </div>
     </div>
     <?php include 'layout/post_model.php'; ?>
+    <?php include 'layout/add_comment_model.php'; ?>
 </body>
 <script>
     $(document).ready(function () {
