@@ -12,7 +12,9 @@
                     }
                 ?>
                 <div class="happening-input">
-                    <p class="cmt-username"><?php echo $userDAta['name'];?> <span style="font-weight: 400;">@<?php echo $userDAta['username'];?>. <?php echo date("F Y", strtotime($userDAta['join_date'])); ?></span></p>
+                    <p class="cmt-username"><?php echo $userDAta['name'];?> 
+                        <span style="font-weight: 400;">@<?php echo $userDAta['username'];?>. <?php echo date("F Y", strtotime($userDAta['join_date'])); ?></span>
+                    </p>
                 </div>
             </div>
             <p id="comment-error"></p>

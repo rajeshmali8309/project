@@ -746,7 +746,7 @@ $(document).ready(function () {
                     setTimeout(function () {
                         $('.post-success-msg').html("");
                         $(".popup-post-form")[0].reset();
-                        $("#charCountpost").text("");
+                        $("#leftcharCountpost").text("");
                         $("#post-modal-overlay").fadeOut(300);
                         profilepage();
                     }, 1500);
@@ -787,7 +787,7 @@ $(document).ready(function () {
                     setTimeout(function () {
                         $('.success-msg').html("");
                         $(".left-post-form")[0].reset();
-                        $("#charCountpost").text("");
+                        $("#charcount").text("");
                         profilepage();
                     }, 1500);
                 }
@@ -882,7 +882,7 @@ $(document).ready(function () {
     $(document).on("click", ".close-comment-modal", function () {
         $("#cmt-form")[0].reset();
         $("#charCountpost").text("");
-        $("#post-comment-modal-overlay").fadeOut(300);
+        $("#post-comment-modal-overlay").fadeOut(300);   
     });
 
     // show more user
@@ -919,7 +919,7 @@ $(document).ready(function () {
     // user follow
     $(document).on("click", ".user-follow-following", function () {
         var might_user_id = $(this).data('post-id');
-        var showfollow = $(".show-profile-followers");
+        var showfollow = $(".show-profile-followers");// for count following/ followers only on profile
         follow_btn = $(this);
 
         // If already following, show confirm before unfollowing
@@ -951,6 +951,48 @@ $(document).ready(function () {
         });
     });
 
+    // for following/followers list 
+    let follow_list_btn = "";
+    // user follow
+    $(document).on("click", ".follow-btn-list", function () {
+        var user_id_follow = $(this).data('user-id');
+        follow_list_btn = $(this);
+
+        // Confirm unfollow
+        if (follow_list_btn.hasClass("following-show-userfolowers")) {
+            if (!confirm("Are you sure you want to unfollow?")) {
+                return;
+            }
+        }
+
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "follow_opponent_user_id": user_id_follow,
+            },
+            success: function (followResult) {
+                let response = JSON.parse(followResult);
+
+                // Update button label and class
+                follow_list_btn.removeClass("follow-back following-show-userfolowers").text("Follow");
+                if (response.status === "Following") {
+                    follow_list_btn.addClass("following-show-userfolowers").text("Following");
+                } else if (response.status === "Follow Back") {
+                    follow_list_btn.addClass("follow-back").text("Follow Back");
+                }
+            }
+        });
+    });
+
+    $(document).on("mouseenter", ".follow-btn-list.following-show-userfolowers", function () {
+        $(this).addClass("hovering").text("Unfollow");
+    });
+
+    $(document).on("mouseleave", ".follow-btn-list.following-show-userfolowers", function () {
+        $(this).removeClass("hovering").text("Following");
+    });
+
     // Show following/followers modal dynamically
     $(document).on('click', '.following-show', function () {
         $('.overlay-bg').fadeIn();
@@ -969,6 +1011,55 @@ $(document).ready(function () {
     });
     $(document).on("mouseleave", ".user-follow-following.following", function () {
         $(this).text("Following");
+    });
+
+    // show following/followers/followers for other user profile
+    let other_follow_button = "";
+    // user follow
+    $(document).on("click", ".other-profile-follow-btn", function () {
+        var user_id_follow = $(this).data('user-id');
+        other_follow_button = $(this);
+
+        // Confirm unfollow
+        if (other_follow_button.hasClass("other-user_follow-btn")) {
+            if (!confirm("Are you sure you want to unfollow?")) {
+                return;
+            }
+        }
+
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "follow_other_profile_id": user_id_follow,
+            },
+            success: function (followResult) {
+                let response = JSON.parse(followResult);
+
+                // Update counts (optional)
+                $(".other-followers-show").text(response.followers_count);
+                $(".other-following-show").text(response.following_count);
+                
+                // console.log("follower " +response.followers_coun);
+                // console.log("following " +response.following_count);
+
+                // Update button label and class
+                other_follow_button.removeClass("follow_back other-user_follow-btn").text("Follow");
+                if (response.status === "Following") {
+                    other_follow_button.addClass("other-user_follow-btn").text("Following");
+                } else if (response.status === "Follow Back") {
+                    other_follow_button.addClass("follow-back").text("Follow Back");
+                }
+            }
+        });
+    });
+
+    $(document).on("mouseenter", ".other-profile-follow-btn.other-user_follow-btn", function () {
+        $(this).addClass("hovering-other").text("Unfollow");
+    });
+
+    $(document).on("mouseleave", ".other-profile-follow-btn.other-user_follow-btn", function () {
+        $(this).removeClass("hovering-other").text("Following");
     });
 });
 

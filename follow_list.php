@@ -73,7 +73,7 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
 
             <!-- following user details -->
-            <div class="center-content" style="padding-top: 56px;">                
+            <div class="center-content" style="padding-top: 56px;">
             </div>
         </div>
 
@@ -89,7 +89,7 @@ if(isset($_SESSION["userid"])){ ?>
     function userFollowing(value){
         var username = $(".user-name-value").val();
         if(value === 'following'){
-            $("#followers-active").removeClass('following-list-active')
+            $("#followers-active").removeClass('following-list-active');
             $("#following-active").addClass('following-list-active');
             $.ajax({
                 url: "controller.php",
@@ -105,7 +105,7 @@ if(isset($_SESSION["userid"])){ ?>
         }
 
         if(value === 'followers'){
-            $("#followers-active").addClass('following-list-active')
+            $("#followers-active").addClass('following-list-active');
             $("#following-active").removeClass('following-list-active');
             $.ajax({
                 url: "controller.php",

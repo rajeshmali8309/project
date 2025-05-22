@@ -469,6 +469,46 @@ if(isset($_REQUEST['follow_opponent_id'])){
     ]);
 }
 
+if (isset($_REQUEST['follow_opponent_user_id'])) {
+    $opponent_id = isset($_POST['follow_opponent_user_id']) ? $_POST['follow_opponent_user_id'] : "";
+    $userId = $_SESSION['login_user_id'];
+
+    // Check if already followed
+    $isFollowing = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+
+    if ($isFollowing) {
+        // Unfollow
+        mysqli_query($conn, "DELETE FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'");
+    } else {
+        // Follow
+        mysqli_query($conn, "INSERT INTO twitter_followers(followers, following) VALUES ('$opponent_id','$userId')");
+    }
+
+    // Recheck relationship status
+    $iFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+    $theyFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$userId' AND following = '$opponent_id'")) > 0;
+
+    $status = "Follow";
+    if ($iFollow && $theyFollow) {
+        $status = "Following"; // Mutual or you're already following
+    } elseif ($iFollow) {
+        $status = "Following";
+    } elseif ($theyFollow) {
+        $status = "Follow Back";
+    }
+
+    // Counts
+    $following = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId"));
+    $followers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $userId"));
+
+    echo json_encode([
+        'following_count' => $following['total'],
+        'followers_count' => $followers['total'],
+        'status' => $status
+    ]);
+}
+
+
 // profile all pages fetch Dynamic Data using ajax request
 if (isset($_REQUEST['Profilepage'])) {
     $page = isset($_REQUEST['Profilepage']) ? $_REQUEST['Profilepage'] : "";
@@ -955,29 +995,30 @@ if (isset($_REQUEST['profile_page_record'])){
                 if(empty($userDAta['cover_picture'])){ ?>
                     <div class="banner">
                         <span class="icon" onclick="document.getElementById('banner-upload').click();">+</span>
-                        <span class="remove-banner">Remove</span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                     </div>
                 <?php }else{?>
-                    <div class="banner" onclick="document.getElementById('banner-upload').click();">
+                    <div class="banner">
                         <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
+                        <span class="remove-banner">Remove</span>
+                        <span class="fileerror"></span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
-                        <input type="hidden" name="profile_cover" value="<?php echo $userDAta['cover_picture']; ?>">
+                        <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
                     </div>
                 <?php }
 
                 // for user profile_picture
                 if(empty($userDAta['profile_picture'])){ ?>
-                    <div class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                    <div class="profile-pic">
                         <span class="icon"><?php echo $_SESSION['firstchr']; ?></span>
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('profile-upload').click();">+</i>
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                     </div>
                 <?php }else{?>
-                    <div id="dp-pic" class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                    <div id="dp-pic" class="profile-pic">
                         <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="icon" alt="No-dp" width="80">
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('profile-upload').click();">+</i>
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                         <input type="hidden" name="profile_picture" value="<?php echo $userDAta['profile_picture']; ?>">
                     </div>
@@ -1213,15 +1254,7 @@ if (isset($_REQUEST['other_Profile_page'])) {
                             </div>
                             <?php
                         } ?>
-                        
-                        <!-- <div class="post-img">
-                            <img src="posts/?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
-                        </div> -->
-                        <!-- <div class="post-img">
-                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/ echo $post['post_file'];?>" type="video/mp4">
-                            </video>
-                        </div> -->
+
                     <?php }
                     ?>
 

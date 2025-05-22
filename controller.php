@@ -15,39 +15,39 @@ if (isset($_REQUEST['newuserinsert'])) {
     $new_user_insert_result = mysqli_query($conn, $new_user_insert_query);
     if ($new_user_insert_result) {
         $_SESSION["userid"] = $Username;
-         header("location:index.php");
+        header("location:index.php");
     }
 }
 
 
 // check email allready taken...
-if(isset($_REQUEST['mailexits'])){
+if (isset($_REQUEST['mailexits'])) {
     $Emaildata = trim(isset($_POST['email']) ? $_POST['email'] : "");
 
     $emailcheck = "SELECT * FROM twitter_users WHERE email = '$Emaildata'";
-    $resultemail = mysqli_query($conn,$emailcheck);
-    if($resultemail->num_rows>0){
+    $resultemail = mysqli_query($conn, $emailcheck);
+    if ($resultemail->num_rows > 0) {
         echo json_encode([
-            'status'=>'failed'
+            'status' => 'failed'
         ]);
-    }else{
+    } else {
         echo json_encode([
-            'status'=>'success'
+            'status' => 'success'
         ]);
     }
 }
 
 //check edit email allready taken...
-if(isset($_REQUEST['edit_mail_exits'])){
+if (isset($_REQUEST['edit_mail_exits'])) {
     $find_user_info = $_SESSION['userid'];
     $findusername = "SELECT * FROM `twitter_users` WHERE username = '$find_user_info'";
-    $result = mysqli_query($conn,$findusername);
+    $result = mysqli_query($conn, $findusername);
     $userDAta = mysqli_fetch_assoc($result);
     $currentEmail = $userDAta['email'];
     $editEmail = trim(isset($_POST['edit_email']) ? $_POST['edit_email'] : "");
 
     $check = "SELECT * FROM twitter_users WHERE email = '$editEmail' AND email != '$currentEmail'";
-    $resultemail = mysqli_query($conn,$check);
+    $resultemail = mysqli_query($conn, $check);
     if ($resultemail && $resultemail->num_rows > 0) {
         echo json_encode(['status' => 'failed']);
     } else {
@@ -56,18 +56,18 @@ if(isset($_REQUEST['edit_mail_exits'])){
 }
 
 //check username allready taken...
-if(isset($_REQUEST['usernameexits'])){
+if (isset($_REQUEST['usernameexits'])) {
     $usernamedata = trim(isset($_POST['username']) ? $_POST['username'] : "");
 
     $usercheck = "SELECT * FROM twitter_users WHERE username = '$usernamedata'";
-    $resultuser = mysqli_query($conn,$usercheck);
-    if($resultuser->num_rows>0){
+    $resultuser = mysqli_query($conn, $usercheck);
+    if ($resultuser->num_rows > 0) {
         echo json_encode([
-            'status'=>'failed'
+            'status' => 'failed'
         ]);
-    }else{
+    } else {
         echo json_encode([
-            'status'=>'success'
+            'status' => 'success'
         ]);
     }
 }
@@ -89,18 +89,18 @@ if (isset($_REQUEST['edit_username_exits'])) {
 }
 
 // user post delete
-if(isset($_REQUEST['post_delete_id'])){
+if (isset($_REQUEST['post_delete_id'])) {
     $Post_delete_id = trim(isset($_POST['post_delete_id']) ? $_POST['post_delete_id'] : "");
 
     $Post_delete_query = "DELETE FROM `twitter_posts` WHERE id = '$Post_delete_id'";
-    $deleteResult = mysqli_query($conn,$Post_delete_query);
-    if($deleteResult){
+    $deleteResult = mysqli_query($conn, $Post_delete_query);
+    if ($deleteResult) {
         echo json_encode([
-            'status'=>'success'
+            'status' => 'success'
         ]);
-    }else{
+    } else {
         echo json_encode([
-            'status'=>'failed'
+            'status' => 'failed'
         ]);
     }
 }
@@ -112,11 +112,11 @@ if (isset($_REQUEST['loginuser'])) {
 
     // find username using user email
     $findusername = "SELECT * FROM `twitter_users` WHERE email = '$loginData';";
-    $result = mysqli_query($conn,$findusername);
+    $result = mysqli_query($conn, $findusername);
     $userDAta = mysqli_fetch_assoc($result);
-    if($userDAta){
+    if ($userDAta) {
         $username = $userDAta['username'];
-    }else{
+    } else {
         $username = $loginData;
     }
 
@@ -139,12 +139,12 @@ if (isset($_REQUEST['loginuser'])) {
 
 // Foryou Data
 if (isset($_REQUEST['foryou_data'])) {
-    ?>
-        <div class="post">
-            <?php
-             include 'layout/postform.php';
-            ?>
-        </div>
+?>
+    <div class="post">
+        <?php
+        include 'layout/postform.php';
+        ?>
+    </div>
     <?php
 
     //fetch all users all posts randomaly
@@ -164,7 +164,7 @@ if (isset($_REQUEST['foryou_data'])) {
     $result = mysqli_query($conn, $for_you_query);
 
     if ($result->num_rows > 0) {
-        while($post = $result->fetch_assoc()) {
+        while ($post = $result->fetch_assoc()) {
             $user_name = $post['name'];
             $fstChar = $user_name[0];
 
@@ -182,31 +182,21 @@ if (isset($_REQUEST['foryou_data'])) {
 
             if ($years > 0) {
                 $output = $years . ' Y';
-            }
-            
-            elseif ($months > 0) {
+            } elseif ($months > 0) {
                 $output = $months . 'M';
-            }
-
-            elseif ($weeks > 0) {
+            } elseif ($weeks > 0) {
                 $output = $weeks . 'W';
-            }
-
-            elseif ($days > 0) {
+            } elseif ($days > 0) {
                 $output = $days . 'd';
-            }
-
-            elseif ($hours > 0) {
+            } elseif ($hours > 0) {
                 $output = $hours . 'h';
-            }
-
-            elseif ($minutes > 0) {
+            } elseif ($minutes > 0) {
                 $output = $minutes . 'm';
-            }else{
-            $output = ' Just now';
+            } else {
+                $output = ' Just now';
             }
 
-            
+
             //like Count 
             $post_Id = $post['post_id'];
             $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $post_Id";
@@ -223,19 +213,19 @@ if (isset($_REQUEST['foryou_data'])) {
             $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
             $userLiked_query = mysqli_query($conn, $query_liked_user);
 
-            ?>
+    ?>
             <div class="post">
                 <div class="post-information">
-                    <?php if(empty($post['profile_picture'])){ ?>
-                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><span><?php echo $fstChar;?></span></a>
-                    <?php }else{
-                        ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
-                    }?>
-                        <p>
-                            <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><b style="color:black;"><?php echo $post['name']?> </b></a>
-                            <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>">@<?php echo $post['username']?></a> 
-                            <b class="user-post-time"><?php echo $output; ?></b>
-                        </p>
+                    <?php if (empty($post['profile_picture'])) { ?>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><span><?php echo $fstChar; ?></span></a>
+                    <?php } else {
+                    ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
+                                                                                                                                                                                                                                } ?>
+                    <p>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><b style="color:black;"><?php echo $post['name'] ?> </b></a>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>">@<?php echo $post['username'] ?></a>
+                        <b class="user-post-time"><?php echo $output; ?></b>
+                    </p>
                 </div>
 
                 <div class="post-information">
@@ -249,46 +239,58 @@ if (isset($_REQUEST['foryou_data'])) {
                 if (!empty($myfile)) {
                     $ext = explode(".", $myfile);
                     if (strtolower(end($ext)) == "mp4") {
-                        ?> 
+                ?>
                         <div class="post-img">
                             <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/<?php echo $post['post_file'];?>" type="video/mp4">
+                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
                             </video>
                         </div>
-                        <?php
+                    <?php
                     } else {
-                        ?> 
+                    ?>
                         <div class="post-img">
-                            <img src="posts/<?php echo $post['post_file'];?>" alt="No post file" width="100%" height="500px">
+                            <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="100%" height="500px">
                         </div>
-                        <?php
+                    <?php
                     } ?>
                 <?php }
                 ?>
 
                 <div class="post-reactions">
                     <a class="like-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="<?php if(mysqli_num_rows($userLiked_query) > 0){ echo "fa-solid text-pink fa-heart"; }else{ echo "fa-regular fa-heart"; } ?>"> <span class="like-count"><?php if(!empty($likeData['total'])){ echo $likeData['total']; }else{ echo ""; }?></span></i>
+                        <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
+                                        echo "fa-solid text-pink fa-heart";
+                                    } else {
+                                        echo "fa-regular fa-heart";
+                                    } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
+                                                                                                                                                                                                echo $likeData['total'];
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo "";
+                                                                                                                                                                                            } ?></span></i>
                     </a>
 
                     <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="fa-regular fa-comment"> <span class="comment-count"><?php if(!empty($commentData['total'])){ echo $commentData['total']; }else{ echo ""; }?></span></i>
+                        <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
+                                                                                            echo $commentData['total'];
+                                                                                        } else {
+                                                                                            echo "";
+                                                                                        } ?></span></i>
                     </a>
                 </div>
             </div>
-            <?php
+    <?php
         }
-    } 
+    }
 }
 
 // Following Data
 if (isset($_REQUEST['following_data'])) {
     ?>
-        <div class="post">
-            <?php
-             include 'layout/postform.php';
-            ?>
-        </div>
+    <div class="post">
+        <?php
+        include 'layout/postform.php';
+        ?>
+    </div>
     <?php
 
     $login_UserId = $_SESSION['login_user_id'];
@@ -312,10 +314,10 @@ if (isset($_REQUEST['following_data'])) {
     $result = mysqli_query($conn, $query_following);
 
     if ($result->num_rows > 0) {
-        while($post = $result->fetch_assoc()) {
+        while ($post = $result->fetch_assoc()) {
             $user_name = $post['name'];
             $fstChar = $user_name[0];
-            
+
             date_default_timezone_set("Asia/Kolkata");
             $postTime = new DateTime($post['created_at']);
             $currentTime = new DateTime();
@@ -330,31 +332,21 @@ if (isset($_REQUEST['following_data'])) {
 
             if ($years > 0) {
                 $output = $years . ' Y';
-            }
-            
-            elseif ($months > 0) {
+            } elseif ($months > 0) {
                 $output = $months . 'M';
-            }
-
-            elseif ($weeks > 0) {
+            } elseif ($weeks > 0) {
                 $output = $weeks . 'W';
-            }
-
-            elseif ($days > 0) {
+            } elseif ($days > 0) {
                 $output = $days . 'd';
-            }
-
-            elseif ($hours > 0) {
+            } elseif ($hours > 0) {
                 $output = $hours . 'h';
-            }
-
-            elseif ($minutes > 0) {
+            } elseif ($minutes > 0) {
                 $output = $minutes . 'm';
-            }else{
-            $output = ' Just now';
+            } else {
+                $output = ' Just now';
             }
 
-            
+
             //like Count 
             $post_Id = $post['post_id'];
             $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $post_Id";
@@ -371,19 +363,19 @@ if (isset($_REQUEST['following_data'])) {
             $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
             $userLiked_query = mysqli_query($conn, $query_liked_user);
 
-            ?>
+    ?>
             <div class="post">
                 <div class="post-information">
-                    <?php if(empty($post['profile_picture'])){ ?>
-                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><span><?php echo $fstChar;?></span></a>
-                    <?php }else{
-                        ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
-                    }?>
-                        <p>
-                            <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>"><b style="color:black;"><?php echo $post['name']?> </b></a>
-                            <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username'];?>">@<?php echo $post['username']?></a> 
-                            <b class="user-post-time"><?php echo $output; ?></b>
-                        </p>
+                    <?php if (empty($post['profile_picture'])) { ?>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><span><?php echo $fstChar; ?></span></a>
+                    <?php } else {
+                    ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
+                                                                                                                                                                                                                                } ?>
+                    <p>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><b style="color:black;"><?php echo $post['name'] ?> </b></a>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>">@<?php echo $post['username'] ?></a>
+                        <b class="user-post-time"><?php echo $output; ?></b>
+                    </p>
                 </div>
 
                 <div class="post-information">
@@ -397,40 +389,52 @@ if (isset($_REQUEST['following_data'])) {
                 if (!empty($myfile)) {
                     $ext = explode(".", $myfile);
                     if (strtolower(end($ext)) == "mp4") {
-                        ?> 
+                ?>
                         <div class="post-img">
                             <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/<?php echo $post['post_file'];?>" type="video/mp4">
+                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
                             </video>
                         </div>
-                        <?php
+                    <?php
                     } else {
-                        ?> 
+                    ?>
                         <div class="post-img">
-                            <img src="posts/<?php echo $post['post_file'];?>" alt="No post file" width="100%" height="500px">
+                            <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="100%" height="500px">
                         </div>
-                        <?php
+                    <?php
                     } ?>
                 <?php }
                 ?>
 
                 <div class="post-reactions">
                     <a class="like-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="<?php if(mysqli_num_rows($userLiked_query) > 0){ echo "fa-solid text-pink fa-heart"; }else{ echo "fa-regular fa-heart"; } ?>"> <span class="like-count"><?php if(!empty($likeData['total'])){ echo $likeData['total']; }else{ echo ""; }?></span></i>
+                        <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
+                                        echo "fa-solid text-pink fa-heart";
+                                    } else {
+                                        echo "fa-regular fa-heart";
+                                    } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
+                                                                                                                                                                                                echo $likeData['total'];
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo "";
+                                                                                                                                                                                            } ?></span></i>
                     </a>
 
                     <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="fa-regular fa-comment"> <span class="comment-count"><?php if(!empty($commentData['total'])){ echo $commentData['total']; }else{ echo ""; }?></span></i>
+                        <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
+                                                                                            echo $commentData['total'];
+                                                                                        } else {
+                                                                                            echo "";
+                                                                                        } ?></span></i>
                     </a>
                 </div>
             </div>
             <?php
         }
-    } 
+    }
 }
 
 //user follow unfollow...
-if(isset($_REQUEST['follow_opponent_id'])){
+if (isset($_REQUEST['follow_opponent_id'])) {
     $opponent_id = isset($_POST['follow_opponent_id']) ? $_POST['follow_opponent_id'] : "";
     $userId = $_SESSION['login_user_id'];
 
@@ -438,16 +442,16 @@ if(isset($_REQUEST['follow_opponent_id'])){
     $check_follow_query = "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'";
     $check = mysqli_query($conn, $check_follow_query);
 
-    if(mysqli_num_rows($check) > 0){
+    if (mysqli_num_rows($check) > 0) {
         // if following to unfollow
         $delete_follow_query = "DELETE FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'";
-        mysqli_query($conn,$delete_follow_query);
+        mysqli_query($conn, $delete_follow_query);
         $follow = false;
     } else {
         // following if not follow
         $followinsert_query = "INSERT INTO `twitter_followers`(`followers`, `following`) VALUES ('$opponent_id','$userId')";
-        $follow_insert_result = mysqli_query($conn,$followinsert_query);
-        if($follow_insert_result){
+        $follow_insert_result = mysqli_query($conn, $followinsert_query);
+        if ($follow_insert_result) {
             $follow = true;
         }
     }
@@ -469,19 +473,59 @@ if(isset($_REQUEST['follow_opponent_id'])){
     ]);
 }
 
+if (isset($_REQUEST['follow_opponent_user_id'])) {
+    $opponent_id = isset($_POST['follow_opponent_user_id']) ? $_POST['follow_opponent_user_id'] : "";
+    $userId = $_SESSION['login_user_id'];
+
+    // Check if already followed
+    $isFollowing = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+
+    if ($isFollowing) {
+        // Unfollow
+        mysqli_query($conn, "DELETE FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'");
+    } else {
+        // Follow
+        mysqli_query($conn, "INSERT INTO twitter_followers(followers, following) VALUES ('$opponent_id','$userId')");
+    }
+
+    // Recheck relationship status
+    $iFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+    $theyFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$userId' AND following = '$opponent_id'")) > 0;
+
+    $status = "Follow";
+    if ($iFollow && $theyFollow) {
+        $status = "Following"; // Mutual or you're already following
+    } elseif ($iFollow) {
+        $status = "Following";
+    } elseif ($theyFollow) {
+        $status = "Follow Back";
+    }
+
+    // Counts
+    $following = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId"));
+    $followers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $userId"));
+
+    echo json_encode([
+        'following_count' => $following['total'],
+        'followers_count' => $followers['total'],
+        'status' => $status
+    ]);
+}
+
+
 // profile all pages fetch Dynamic Data using ajax request
 if (isset($_REQUEST['Profilepage'])) {
     $page = isset($_REQUEST['Profilepage']) ? $_REQUEST['Profilepage'] : "";
     // fetch login userData
     include 'login_user_data.php';
 
-    if($page === 'Posts' || $page === 'Replies'){
+    if ($page === 'Posts' || $page === 'Replies') {
         //fetch user Post for profile page
         $post_fetch_user = "SELECT * FROM `twitter_posts` WHERE `user_id` = $userDAta[id] ORDER BY `id` DESC";
         $result = mysqli_query($conn, $post_fetch_user);
 
         if ($result->num_rows > 0) {
-            while($post = $result->fetch_assoc()) {
+            while ($post = $result->fetch_assoc()) {
                 date_default_timezone_set("Asia/Kolkata");
                 $postTime = new DateTime($post['created_at']);
                 $currentTime = new DateTime();
@@ -496,31 +540,21 @@ if (isset($_REQUEST['Profilepage'])) {
 
                 if ($years > 0) {
                     $output = $years . ' Y';
-                }
-                
-                elseif ($months > 0) {
+                } elseif ($months > 0) {
                     $output = $months . 'M';
-                }
-
-                elseif ($weeks > 0) {
+                } elseif ($weeks > 0) {
                     $output = $weeks . 'W';
-                }
-
-                elseif ($days > 0) {
+                } elseif ($days > 0) {
                     $output = $days . 'd';
-                }
-
-                elseif ($hours > 0) {
+                } elseif ($hours > 0) {
                     $output = $hours . 'h';
-                }
-
-                elseif ($minutes > 0) {
+                } elseif ($minutes > 0) {
                     $output = $minutes . 'm';
-                }else{
-                $output = ' Just now';
+                } else {
+                    $output = ' Just now';
                 }
 
-                
+
                 //like Count 
                 $post_Id = $post['id'];
                 $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $post_Id";
@@ -537,16 +571,16 @@ if (isset($_REQUEST['Profilepage'])) {
                 $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
                 $userLiked_query = mysqli_query($conn, $query_liked_user);
 
-                ?>
+            ?>
                 <div class="user-post-details">
                     <div class="post-information">
-                        <?php if(empty($userDAta['profile_picture'])){ ?>
-                            <span><?php echo $_SESSION['firstchr']?></span>
-                        <?php }else{
-                            ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
-                        }?>
-                        <p><b style="color:black;"><?php echo $userDAta['name']?> </b> @<?php echo $_SESSION['userid']?> <b class="user-post-time"><?php echo $output; ?></b></p>
-                         <button type="button" class="post-delete" data-post-id="<?= $post['id']; ?>">
+                        <?php if (empty($userDAta['profile_picture'])) { ?>
+                            <span><?php echo $_SESSION['firstchr'] ?></span>
+                        <?php } else {
+                        ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
+                                                                                                            } ?>
+                        <p><b style="color:black;"><?php echo $userDAta['name'] ?> </b> @<?php echo $_SESSION['userid'] ?> <b class="user-post-time"><?php echo $output; ?></b></p>
+                        <button type="button" class="post-delete" data-post-id="<?= $post['id']; ?>">
                             <i class="fa-solid fa-ellipsis"></i>
                         </button>
                     </div>
@@ -557,26 +591,26 @@ if (isset($_REQUEST['Profilepage'])) {
                         </div>
                     </div>
 
-                    <?php 
+                    <?php
                     $myfile = $post['post_file'];
                     if (!empty($myfile)) {
                         $ext = explode(".", $myfile);
                         if (strtolower(end($ext)) == "mp4") {
-                            ?> 
+                    ?>
                             <div class="post-img">
                                 <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                    <source src="posts/<?php echo $post['post_file'];?>" type="video/mp4">
+                                    <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
                                 </video>
                             </div>
-                            <?php
+                        <?php
                         } else {
-                            ?> 
+                        ?>
                             <div class="post-img">
-                                <img src="posts/<?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
+                                <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
                             </div>
-                            <?php
+                        <?php
                         } ?>
-                        
+
                         <!-- <div class="post-img">
                             <img src="posts/?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
                         </div> -->
@@ -590,11 +624,23 @@ if (isset($_REQUEST['Profilepage'])) {
 
                     <div class="post-reactions">
                         <a class="like-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="<?php if(mysqli_num_rows($userLiked_query) > 0){ echo "fa-solid text-pink fa-heart"; }else{ echo "fa-regular fa-heart"; } ?>"> <span class="like-count"><?php if(!empty($likeData['total'])){ echo $likeData['total']; }else{ echo ""; }?></span></i>
+                            <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
+                                            echo "fa-solid text-pink fa-heart";
+                                        } else {
+                                            echo "fa-regular fa-heart";
+                                        } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
+                                                                                                                                                                                                    echo $likeData['total'];
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    echo "";
+                                                                                                                                                                                                } ?></span></i>
                         </a>
 
                         <a class="comment-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if(!empty($commentData['total'])){ echo $commentData['total']; }else{ echo ""; }?></span></i>
+                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
+                                                                                                echo $commentData['total'];
+                                                                                            } else {
+                                                                                                echo "";
+                                                                                            } ?></span></i>
                         </a>
                     </div>
 
@@ -606,32 +652,32 @@ if (isset($_REQUEST['Profilepage'])) {
                         </a>
                     </div>
                 </div>
-                <?php
+        <?php
             }
         }
     }
 
     // for highlight
-    if($page === 'Highlights'){
+    if ($page === 'Highlights') {
         ?>
         <div class="highlight-show-Data">
             <h3>No any highlight on your profile</h3>
         </div>
-        <?php
+    <?php
     }
 
     // for Articles
-    if($page === 'Articles'){
-        ?>
+    if ($page === 'Articles') {
+    ?>
         <div class="highlight-show-Data">
             <h3>No any Articles on your profile</h3>
         </div>
-        <?php
+    <?php
     }
 
     // for Likes
-    if($page === 'Likes'){
-        ?>
+    if ($page === 'Likes') {
+    ?>
         <div class="highlight-show-Data">
             <h3>You don’t have any likes yet</h3>
             <p>Tap the heart on any post to show it some love. When you do, it’ll show up here.</p>
@@ -640,27 +686,28 @@ if (isset($_REQUEST['Profilepage'])) {
     }
 
     // for Media
-    if($page === 'Media'){
+    if ($page === 'Media') {
         $media_query = "SELECT * FROM twitter_posts WHERE user_id = $userDAta[id] AND post_file != '' ORDER BY id DESC";
-        $media_result = mysqli_query($conn, $media_query);      
+        $media_result = mysqli_query($conn, $media_query);
 
         if ($media_result->num_rows > 0) {
-            ?>
+        ?>
             <div>
                 <?php
-                while ($media_post = $media_result->fetch_assoc()){
-                       $myfile = $media_post['post_file'];
-                        if (!empty($myfile)) {
-                            $ext = explode(".", $myfile);
-                            if (strtolower(end($ext)) == "mp4") { }else{
-                                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
-                            }
-                        }
-                }
-                ?>
+                while ($media_post = $media_result->fetch_assoc()) {
+                    $myfile = $media_post['post_file'];
+                    if (!empty($myfile)) {
+                        $ext = explode(".", $myfile);
+                        if (strtolower(end($ext)) == "mp4") {
+                        } else {
+                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                            ?>
             </div>
-            <?php
-       }
+    <?php
+        }
     }
 }
 
@@ -677,15 +724,15 @@ if (isset($_REQUEST['user_update'])) {
     $profile_banner = '';
 
     // update for profile pic
-    if(empty($_FILES['profile_pic']['name'])){
+    if (empty($_FILES['profile_pic']['name'])) {
         $profile_pic = isset($_POST['profile_picture']) ? $_POST['profile_picture'] : "";
-    }else{
+    } else {
         // old profile_picture unlink after select new profile_picture
         $imgquery = "SELECT profile_picture FROM `twitter_users` WHERE `id`=$userID";
         $result = mysqli_query($conn, $imgquery);
         $imgrow = mysqli_fetch_assoc($result);
-        if($imgrow){
-            $imagePath = $imgrow['profile_picture'];// find profile_picture from database 
+        if ($imgrow) {
+            $imagePath = $imgrow['profile_picture']; // find profile_picture from database 
             $imageFullPath = 'profile_pic/' . $imagePath;
 
             if (file_exists($imageFullPath)) { // unlink image from profile_pic folder
@@ -694,26 +741,25 @@ if (isset($_REQUEST['user_update'])) {
         } // end unlink
 
         $targetDir = 'profile_pic/';
-        if(!is_dir($targetDir))
-        {
+        if (!is_dir($targetDir)) {
             $targetDir = mkdir($targetDir, 0777, true);
-        }    
-        $profile_pic = time() . '.' . pathinfo($_FILES["profile_pic"]["name"],PATHINFO_EXTENSION);
-        $targetFile = $targetDir .$profile_pic;
-        move_uploaded_file($_FILES["profile_pic"]["tmp_name"],$targetFile);
+        }
+        $profile_pic = time() . '.' . pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION);
+        $targetFile = $targetDir . $profile_pic;
+        move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $targetFile);
     }
 
 
     // update for profile banner
-    if(empty($_FILES['profile_banner']['name'])){
+    if (empty($_FILES['profile_banner']['name'])) {
         $profile_banner = isset($_POST['profile_cover']) ? $_POST['profile_cover'] : "";
-    }else{
+    } else {
         // old profile_banner unlink after select new profile_banner
         $imgquery = "SELECT cover_picture FROM `twitter_users` WHERE `id` = $userID";
         $result = mysqli_query($conn, $imgquery);
         $imgrow = mysqli_fetch_assoc($result);
-        if($imgrow){
-            $imagePath = $imgrow['cover_picture'];// find profile_picture from database 
+        if ($imgrow) {
+            $imagePath = $imgrow['cover_picture']; // find profile_picture from database 
             $imageFullPath = 'profile_banner/' . $imagePath;
 
             if (file_exists($imageFullPath)) { // unlink image from profile_banner folder
@@ -722,89 +768,88 @@ if (isset($_REQUEST['user_update'])) {
         } // end unlink
 
         $targetDir = 'profile_banner/';
-        if(!is_dir($targetDir))
-        {
+        if (!is_dir($targetDir)) {
             $targetDir = mkdir($targetDir, 0777, true);
-        }    
-        $profile_banner = time() . '.' . pathinfo($_FILES["profile_banner"]["name"],PATHINFO_EXTENSION);
-        $targetFile = $targetDir .$profile_banner;
-        move_uploaded_file($_FILES["profile_banner"]["tmp_name"],$targetFile);
+        }
+        $profile_banner = time() . '.' . pathinfo($_FILES["profile_banner"]["name"], PATHINFO_EXTENSION);
+        $targetFile = $targetDir . $profile_banner;
+        move_uploaded_file($_FILES["profile_banner"]["tmp_name"], $targetFile);
     }
 
     $sql = "UPDATE `twitter_users` SET `username`='$Username',`name`='$Name',`email`='$Email',`dob`='$Dob',
        `bio`='$Bio',`profile_picture`='$profile_pic',`cover_picture`='$profile_banner' WHERE `id`=$userID";
-    
-    $result = mysqli_query($conn,$sql);
-    if($result){
+
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
         $_SESSION["userid"] = $Username;
         echo "update successfull";
-    }else{
+    } else {
         echo "update failed";
     }
 }
 
-if(isset($_REQUEST['users_show_limits'])){
+if (isset($_REQUEST['users_show_limits'])) {
     ?>
     <div class="might-like">
         <h3>You might like</h3>
         <!-- you might like show 3 user using limit -->
-            <?php
-            $useridd = $_SESSION['login_user_id'];
-            $limit = trim(isset($_POST['users_show_limits']) ? $_POST['users_show_limits'] : "");
-            $offset = 0;
-            if($limit == 3){
-                $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
+        <?php
+        $useridd = $_SESSION['login_user_id'];
+        $limit = trim(isset($_POST['users_show_limits']) ? $_POST['users_show_limits'] : "");
+        $offset = 0;
+        if ($limit == 3) {
+            $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
               AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')
                LIMIT $offset,$limit";
-            }else{
-                $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
+        } else {
+            $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
                 AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')";
-            }
+        }
 
-            $users_result = mysqli_query($conn, $all_users);
-            while($userinfo = $users_result->fetch_assoc()) {
-                    $user_name = $userinfo['name'];
-                    $userfirstchar = $user_name[0];
-                    ?>
-                <div class="users-might">
-                    <?php
-                        if(empty($userinfo['profile_picture'])){
-                        ?> <div class="profile-avatar"><span><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userfirstchar; ?></a></span></div> <?php
-                        }else{
-                        ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
-                        }
-                    ?>                        
-                    <div style="margin-left: 10px;">
-                        <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userinfo['name']?></a></strong></div>
-                        <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
-                    </div>
-                    <div class="might-follow-users">
-                        <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
-                    </div>
-                </div>
-            <?php }
-            ?>
-            <div>
+        $users_result = mysqli_query($conn, $all_users);
+        while ($userinfo = $users_result->fetch_assoc()) {
+            $user_name = $userinfo['name'];
+            $userfirstchar = $user_name[0];
+        ?>
+            <div class="users-might">
                 <?php
-                 if($limit == 3){ ?>
-                    <a class="show-more-user-btn">Show more</a> <?php
-                }else{ ?>
-                    <a class="show-less-user-btn">Show less</a> <?php
-                }
-                ?>
-             </div>
+                if (empty($userinfo['profile_picture'])) {
+                ?> <div class="profile-avatar"><span><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><?php echo $userfirstchar; ?></a></span></div> <?php
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                        ?>
+                <div style="margin-left: 10px;">
+                    <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><?php echo $userinfo['name'] ?></a></strong></div>
+                    <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>">@<?php echo $userinfo['username'] ?></a></div>
+                </div>
+                <div class="might-follow-users">
+                    <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
+                </div>
+            </div>
+        <?php }
+        ?>
+        <div>
+            <?php
+            if ($limit == 3) { ?>
+                <a class="show-more-user-btn">Show more</a> <?php
+                                                        } else { ?>
+                <a class="show-less-user-btn">Show less</a> <?php
+                                                        }
+                                                            ?>
         </div>
-    <?php
+    </div>
+<?php
 }
 
 // profile page record fetch
-if (isset($_REQUEST['profile_page_record'])){
+if (isset($_REQUEST['profile_page_record'])) {
     // include file of left-sidebar 
     include 'layout/left-sidebar.php';
-    ?>
+?>
     <div class="center-main" style="margin: 0 497px 0 280px;">
         <div class="profile-center-header">
-            <div class="profile-head"><span id=""><?php echo $userDAta['name']?> <br> <span class="profile-post-all-count"><?php echo $totalPosts;?> posts</span></span></div>
+            <div class="profile-head"><span id=""><?php echo $userDAta['name'] ?> <br> <span class="profile-post-all-count"><?php echo $totalPosts; ?> posts</span></span></div>
 
             <div class="search-box" style="margin-left: 670px;">
                 <input type="text" placeholder="🔍︎ Search" id="search">
@@ -815,14 +860,14 @@ if (isset($_REQUEST['profile_page_record'])){
             <div class="user-profile-show">
                 <div class="profile-cover-picture">
                     <?php
-                    if(!empty($userDAta['cover_picture'])){ ?>
-                        <img src="profile_banner/<?php echo $userDAta['cover_picture'];?>" alt="No backgroung Cover" width="100%" height="100%">
-                        <?php }
-                        ?>
+                    if (!empty($userDAta['cover_picture'])) { ?>
+                        <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No backgroung Cover" width="100%" height="100%">
+                    <?php }
+                    ?>
                 </div>
             </div>
             <?php
-             // fetch login userData
+            // fetch login userData
             include 'login_user_data.php';
 
             $userId = $_SESSION['login_user_id']; // logged-in user ID
@@ -838,38 +883,38 @@ if (isset($_REQUEST['profile_page_record'])){
 
             ?>
             <div class="post" id="profile-dp-show">
-                <?php if(empty($userDAta['profile_picture'])){ ?>
-                    <span class="first_char"><?php echo $_SESSION['firstchr']?></span>
-                <?php }else{
-                    ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" id="profile-dp-show" alt="no file"><?php
-                }?>
-                    <button id="edit-profile-btn">Edit profile</button>
-                    <div class="user-profile-info">
-                    <h3><?php echo $userDAta['name']?></h3>
-                    <p>@<?php echo $userDAta['username'];?></p>
+                <?php if (empty($userDAta['profile_picture'])) { ?>
+                    <span class="first_char"><?php echo $_SESSION['firstchr'] ?></span>
+                <?php } else {
+                ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" id="profile-dp-show" alt="no file"><?php
+                                                                                                                            } ?>
+                <button id="edit-profile-btn">Edit profile</button>
+                <div class="user-profile-info">
+                    <h3><?php echo $userDAta['name'] ?></h3>
+                    <p>@<?php echo $userDAta['username']; ?></p>
                     <p><i class="fa-solid fa-calendar-days"></i> <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?></p>
-                    <p><?php echo $userDAta['bio'];?></p>
+                    <p><?php echo $userDAta['bio']; ?></p>
                     <p class="show-profile-followers">
-                        <a style="color: black;" href="follow_list.php?following=<?php echo $userDAta['username']?>"><span class="following-show"><b><?php echo $following['total'];?></b></span><span> Following</span></a>
-                        <a style="color: black;" href="follow_list.php?followers=<?php echo $userDAta['username']?>"><span class="followers-show"><b><?php echo $followers['total'];?></b></span><span> Follower</span></a>
+                        <a style="color: black;" href="follow_list.php?following=<?php echo $userDAta['username'] ?>"><span class="following-show"><b><?php echo $following['total']; ?></b></span><span> Following</span></a>
+                        <a style="color: black;" href="follow_list.php?followers=<?php echo $userDAta['username'] ?>"><span class="followers-show"><b><?php echo $followers['total']; ?></b></span><span> Follower</span></a>
                     </p>
-                    </div>
+                </div>
             </div>
             <!-- following/followers user show -->
             <?php
-                $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
+            $followingUsersQuery = "SELECT u.id, u.name, u.username, u.profile_picture
                                         FROM twitter_followers tf
                                         JOIN twitter_users u ON tf.followers = u.id
                                         WHERE tf.following = $userId";
 
-                $result = mysqli_query($conn, $followingUsersQuery);
+            $result = mysqli_query($conn, $followingUsersQuery);
             ?>
             <div class="overlay-bg"></div>
-             <div class="user-list-popup">
+            <div class="user-list-popup">
                 <div class="close-user-follow-show"><span class="close-user-follow">Close</span></div>
-                <div class="popup-header-follow">@<?php echo $userDAta['username'];?> -><span class="popup-label"><b><?php echo $following['total'];?> </b>Following</span></div>
-                  <?php
-                   while($user = mysqli_fetch_assoc($result)){
+                <div class="popup-header-follow">@<?php echo $userDAta['username']; ?> -><span class="popup-label"><b><?php echo $following['total']; ?> </b>Following</span></div>
+                <?php
+                while ($user = mysqli_fetch_assoc($result)) {
                     $firstChar = strtoupper(substr($user['name'], 0, 1)); ?>
                     <div class="user-item">
                         <img src="profile_pic/<?php echo $user['profile_picture'] ?>" class="user-dp" alt="User DP">
@@ -879,8 +924,8 @@ if (isset($_REQUEST['profile_page_record'])){
                         </div>
                         <button class="follow-btn-list">Following</button>
                     </div>
-                   <?php }
-                  ?>
+                <?php }
+                ?>
                 <!-- More items if needed... -->
             </div>
             <div class="profile-links-btn">
@@ -902,41 +947,41 @@ if (isset($_REQUEST['profile_page_record'])){
         <div class="might-like">
             <h3>You might like</h3>
             <!-- you might like show 3 user using limit -->
-             <?php
-             $offset = 0;
-             $Limit = 3;
-             $useridd = $_SESSION['login_user_id'];
+            <?php
+            $offset = 0;
+            $Limit = 3;
+            $useridd = $_SESSION['login_user_id'];
 
-             $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
+            $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
               AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')
                LIMIT $offset,$Limit";
 
-             $users_result = mysqli_query($conn, $all_users);
-                while($userinfo = $users_result->fetch_assoc()) {
-                        $user_name = $userinfo['name'];
-                        $userfirstchar = $user_name[0];
-                     ?>
-                    <div class="users-might">
-                        <?php
-                         if(empty($userinfo['profile_picture'])){
-                            ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
-                         }else{
-                            ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
-                         }
-                        ?>                        
-                        <div style="margin-left: 10px;">
-                            <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>"><?php echo $userinfo['name']?></a></strong></div>
-                            <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username']?>">@<?php echo $userinfo['username']?></a></div>
-                        </div>
-                        <div class="might-follow-users">
-                            <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
-                        </div>
+            $users_result = mysqli_query($conn, $all_users);
+            while ($userinfo = $users_result->fetch_assoc()) {
+                $user_name = $userinfo['name'];
+                $userfirstchar = $user_name[0];
+            ?>
+                <div class="users-might">
+                    <?php
+                    if (empty($userinfo['profile_picture'])) {
+                    ?> <div class="profile-avatar"><span><?php echo $userfirstchar; ?></span></div> <?php
+                                                                                                        } else {
+                                                                                                            ?> <div><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><img src="profile_pic/<?php echo $userinfo['profile_picture']; ?>" width="50"></a></div> <?php
+                                                                                                                                                                                                        }
+                                                                                                                                                                                                            ?>
+                    <div style="margin-left: 10px;">
+                        <div style="color:black; font-size: 18px;"><strong><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>"><?php echo $userinfo['name'] ?></a></strong></div>
+                        <div style="color: rgb(95, 94, 94);; font-size: 15px;"><a href="other_user_profile.php?username=<?php echo $userinfo['username'] ?>">@<?php echo $userinfo['username'] ?></a></div>
                     </div>
-                <?php }
-             ?>
-             <div>
+                    <div class="might-follow-users">
+                        <a class="user-follow-following follow-btn" data-post-id="<?= $userinfo['id']; ?>">Follow</a>
+                    </div>
+                </div>
+            <?php }
+            ?>
+            <div>
                 <a class="show-more-user-btn">Show more</a>
-             </div>
+            </div>
         </div>
     </div>
 
@@ -952,33 +997,33 @@ if (isset($_REQUEST['profile_page_record'])){
 
                 <!-- for user profile_banner -->
                 <?php
-                if(empty($userDAta['cover_picture'])){ ?>
+                if (empty($userDAta['cover_picture'])) { ?>
                     <div class="banner">
                         <span class="icon" onclick="document.getElementById('banner-upload').click();">+</span>
-                        <span class="remove-banner">Remove</span>
-                        <span class="fileerror"></span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                     </div>
-                <?php }else{?>
-                    <div class="banner" onclick="document.getElementById('banner-upload').click();">
+                <?php } else { ?>
+                    <div class="banner">
                         <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
+                        <span class="remove-banner">Remove</span>
+                        <span class="fileerror"></span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                         <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
                     </div>
                 <?php }
 
                 // for user profile_picture
-                if(empty($userDAta['profile_picture'])){ ?>
-                    <div class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                if (empty($userDAta['profile_picture'])) { ?>
+                    <div class="profile-pic">
                         <span class="icon"><?php echo $_SESSION['firstchr']; ?></span>
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('profile-upload').click();">+</i>
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                     </div>
-                <?php }else{?>
-                    <div id="dp-pic" class="profile-pic" onclick="document.getElementById('profile-upload').click();">
+                <?php } else { ?>
+                    <div id="dp-pic" class="profile-pic">
                         <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="icon" alt="No-dp" width="80">
-                        <i class="icon" style="color: black;">+</i>
+                        <i class="icon" style="color: black;" onclick="document.getElementById('profile-upload').click();">+</i>
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                         <input type="hidden" name="profile_picture" value="<?php echo $userDAta['profile_picture']; ?>">
                     </div>
@@ -986,34 +1031,34 @@ if (isset($_REQUEST['profile_page_record'])){
                 ?>
                 <!-- <span>choose a valid file</span> -->
 
-                 <div class="form-group">
+                <div class="form-group">
                     <label>Name: <span class="edit-userName"></span></label>
-                    <input type="hidden" name="userid" value="<?php echo $userDAta['id']?>">
-                    <input type="text" id="countName" class="Name" name="name" maxlength="20" oninput="NameCharCount()" value="<?php echo $userDAta['name']?>">
+                    <input type="hidden" name="userid" value="<?php echo $userDAta['id'] ?>">
+                    <input type="text" id="countName" class="Name" name="name" maxlength="20" oninput="NameCharCount()" value="<?php echo $userDAta['name'] ?>">
                     <span style="margin-left: 88%;" id="namecount"></span>
                 </div>
 
                 <div class="form-group">
                     <label>Username: <span class="edit-userUsername"></span></label>
                     <input type="hidden" id="edit-valid-username" value="success">
-                    <input type="text" id="countUsername" maxlength="15" class="Username" name="username" oninput="UsernameCharCount()" value="<?php echo $userDAta['username']?>">
+                    <input type="text" id="countUsername" maxlength="15" class="Username" name="username" oninput="UsernameCharCount()" value="<?php echo $userDAta['username'] ?>">
                     <span style="margin-left: 88%;" id="usernamecount"></span>
                 </div>
 
                 <div class="form-group">
                     <label>Email: <span class="edit-userEmail"></span></label>
                     <input type="hidden" id="edit-valid-mail" value="success">
-                    <input type="text" class="Email" name="email" value="<?php echo $userDAta['email']?>">
+                    <input type="text" class="Email" name="email" value="<?php echo $userDAta['email'] ?>">
                 </div>
 
                 <div class="form-group">
                     <label>DOB: <span class="edit-userDOB"></span></label>
-                    <input type="date" class="DOB" name="dob" value="<?php echo $userDAta['dob']?>">
+                    <input type="date" class="DOB" name="dob" value="<?php echo $userDAta['dob'] ?>">
                 </div>
 
                 <div class="form-group">
                     <label>Bio</label>
-                    <textarea id="bio" name="bio" maxlength="160" rows="3" oninput="updateCharCount()"><?php echo $userDAta['bio']?></textarea>
+                    <textarea id="bio" name="bio" maxlength="160" rows="3" oninput="updateCharCount()"><?php echo $userDAta['bio'] ?></textarea>
                     <div class="char-count" id="charCount"></div>
                 </div>
             </form>
@@ -1029,42 +1074,42 @@ if (isset($_REQUEST['user_post_insert'])) {
     $PostFile = '';
 
     // for post file
-    if(!empty($_FILES['post_file']['name'])){
+    if (!empty($_FILES['post_file']['name'])) {
         $targetDir = 'posts/';
-        $PostFile = time() . '.' . pathinfo($_FILES["post_file"]["name"],PATHINFO_EXTENSION);
-        $targetFile = $targetDir .$PostFile;
-        move_uploaded_file($_FILES["post_file"]["tmp_name"],$targetFile);
+        $PostFile = time() . '.' . pathinfo($_FILES["post_file"]["name"], PATHINFO_EXTENSION);
+        $targetFile = $targetDir . $PostFile;
+        move_uploaded_file($_FILES["post_file"]["tmp_name"], $targetFile);
     }
 
     $sql = "INSERT INTO `twitter_posts`(`user_id`, `post_file`, `description`) VALUES ('$user_id','$PostFile','$Description')";
-    $result = mysqli_query($conn,$sql);
+    $result = mysqli_query($conn, $sql);
 
-    if($result){
+    if ($result) {
         echo "Post SuccessFully...!";
-    }else{ 
+    } else {
         echo "Post Failed...!";
     }
 }
 
 // like insert & Count operation on ajax request
-if (isset($_REQUEST['post_like_insert'])){
+if (isset($_REQUEST['post_like_insert'])) {
     $userId = $_SESSION['login_user_id'];
     $postId = $_POST['post_id'];
-    
+
     // Check if already like
     $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId'";
     $check = mysqli_query($conn, $check_query);
 
-    if(mysqli_num_rows($check) > 0){
+    if (mysqli_num_rows($check) > 0) {
         // if liked to unlike
         $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId'";
-        mysqli_query($conn,$delete_like_query);
+        mysqli_query($conn, $delete_like_query);
         $liked = false;
     } else {
         // insert like if not liked
         $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `post_id`, `likeable_type`) VALUES ('$userId','$postId','post')";
-        $like_insert_result = mysqli_query($conn,$like_insert_query);
-        if($like_insert_query){
+        $like_insert_result = mysqli_query($conn, $like_insert_query);
+        if ($like_insert_query) {
             $liked = true;
         }
     }
@@ -1081,15 +1126,15 @@ if (isset($_REQUEST['post_like_insert'])){
 }
 
 // comment insert & Count operation on ajax request
-if (isset($_REQUEST['post_comment_insert'])){
+if (isset($_REQUEST['post_comment_insert'])) {
     $Comment = trim(isset($_POST['comment_value']) ? $_POST['comment_value'] : "");
     $userId = $_SESSION['login_user_id'];
     $postId = $_POST['post_id'];
 
     // insert comment
     $comment_insert_query = "INSERT INTO twitter_post_comments (`user_id`, `post_id`, `comments`) VALUES ('$userId','$postId','$Comment')";
-    $comment_insert_result = mysqli_query($conn,$comment_insert_query);
-    if($comment_insert_result){
+    $comment_insert_result = mysqli_query($conn, $comment_insert_query);
+    if ($comment_insert_result) {
         $comment = true;
     }
 
@@ -1111,18 +1156,18 @@ if (isset($_REQUEST['other_Profile_page'])) {
 
     // fetch other userData
     $finduser_query = "SELECT * FROM `twitter_users` WHERE id = '$Other_UserId'";
-    $userinfo = mysqli_query($conn,$finduser_query);
+    $userinfo = mysqli_query($conn, $finduser_query);
     $userDAta = mysqli_fetch_assoc($userinfo);
     $name = $userDAta['name'];
     $firstchar = $name[0];
 
-    if($page === 'other-posts'){
+    if ($page === 'other-posts') {
         //fetch user Post for profile page
         $post_fetch_user = "SELECT * FROM `twitter_posts` WHERE `user_id` = $Other_UserId ORDER BY `id` DESC";
         $result = mysqli_query($conn, $post_fetch_user);
 
         if ($result->num_rows > 0) {
-            while($post = $result->fetch_assoc()) {
+            while ($post = $result->fetch_assoc()) {
                 date_default_timezone_set("Asia/Kolkata");
                 $postTime = new DateTime($post['created_at']);
                 $currentTime = new DateTime();
@@ -1137,31 +1182,21 @@ if (isset($_REQUEST['other_Profile_page'])) {
 
                 if ($years > 0) {
                     $output = $years . ' Y';
-                }
-                
-                elseif ($months > 0) {
+                } elseif ($months > 0) {
                     $output = $months . 'M';
-                }
-
-                elseif ($weeks > 0) {
+                } elseif ($weeks > 0) {
                     $output = $weeks . 'W';
-                }
-
-                elseif ($days > 0) {
+                } elseif ($days > 0) {
                     $output = $days . 'd';
-                }
-
-                elseif ($hours > 0) {
+                } elseif ($hours > 0) {
                     $output = $hours . 'h';
-                }
-
-                elseif ($minutes > 0) {
+                } elseif ($minutes > 0) {
                     $output = $minutes . 'm';
-                }else{
-                $output = ' Just now';
+                } else {
+                    $output = ' Just now';
                 }
 
-                
+
                 //like Count 
                 $post_Id = $post['id'];
                 $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $post_Id";
@@ -1178,15 +1213,15 @@ if (isset($_REQUEST['other_Profile_page'])) {
                 $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND post_id = '$post_Id'";
                 $userLiked_query = mysqli_query($conn, $query_liked_user);
 
-                ?>
+    ?>
                 <div class="user-post-details">
                     <div class="post-information">
-                        <?php if(empty($userDAta['profile_picture'])){ ?>
-                            <span><?php echo $firstchar;?></span>
-                        <?php }else{
-                            ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
-                        }?>
-                        <p><b style="color:black;"><?php echo $userDAta['name']?> </b> @<?php echo $userDAta['username']?> <b class="user-post-time"><?php echo $output; ?></b></p>
+                        <?php if (empty($userDAta['profile_picture'])) { ?>
+                            <span><?php echo $firstchar; ?></span>
+                        <?php } else {
+                        ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" alt="no file"><?php
+                                                                                                            } ?>
+                        <p><b style="color:black;"><?php echo $userDAta['name'] ?> </b> @<?php echo $userDAta['username'] ?> <b class="user-post-time"><?php echo $output; ?></b></p>
                     </div>
 
                     <div class="post-information">
@@ -1195,85 +1230,90 @@ if (isset($_REQUEST['other_Profile_page'])) {
                         </div>
                     </div>
 
-                    <?php 
+                    <?php
                     $myfile = $post['post_file'];
                     if (!empty($myfile)) {
                         $ext = explode(".", $myfile);
                         if (strtolower(end($ext)) == "mp4") {
-                            ?> 
+                    ?>
                             <div class="post-img">
                                 <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                    <source src="posts/<?php echo $post['post_file'];?>" type="video/mp4">
+                                    <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
                                 </video>
                             </div>
-                            <?php
+                        <?php
                         } else {
-                            ?> 
+                        ?>
                             <div class="post-img">
-                                <img src="posts/<?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
+                                <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
                             </div>
-                            <?php
+                        <?php
                         } ?>
-                        
-                        <!-- <div class="post-img">
-                            <img src="posts/?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
-                        </div> -->
-                        <!-- <div class="post-img">
-                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/ echo $post['post_file'];?>" type="video/mp4">
-                            </video>
-                        </div> -->
+
                     <?php }
                     ?>
 
                     <div class="post-reactions">
                         <a class="like-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="<?php if(mysqli_num_rows($userLiked_query) > 0){ echo "fa-solid text-pink fa-heart"; }else{ echo "fa-regular fa-heart"; } ?>"> <span class="like-count"><?php if(!empty($likeData['total'])){ echo $likeData['total']; }else{ echo ""; }?></span></i>
+                            <i class="<?php if (mysqli_num_rows($userLiked_query) > 0) {
+                                            echo "fa-solid text-pink fa-heart";
+                                        } else {
+                                            echo "fa-regular fa-heart";
+                                        } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
+                                                                                                                                                                                                    echo $likeData['total'];
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    echo "";
+                                                                                                                                                                                                } ?></span></i>
                         </a>
 
                         <a class="comment-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if(!empty($commentData['total'])){ echo $commentData['total']; }else{ echo ""; }?></span></i>
+                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
+                                                                                                echo $commentData['total'];
+                                                                                            } else {
+                                                                                                echo "";
+                                                                                            } ?></span></i>
                         </a>
                     </div>
                 </div>
-                <?php
+            <?php
             }
-        }else{
+        } else {
             ?>
             <div class="highlight-show-Data">
                 <h3>No any post on your profile</h3>
             </div>
-            <?php
+        <?php
         }
     }
 
     // for Media
-    if($page === 'other-media'){
+    if ($page === 'other-media') {
         $media_query = "SELECT * FROM twitter_posts WHERE user_id = $Other_UserId AND post_file != '' ORDER BY id DESC";
         $media_result = mysqli_query($conn, $media_query);
 
         if ($media_result->num_rows > 0) {
-            ?>
+        ?>
             <div>
                 <?php
-                while ($media_post = $media_result->fetch_assoc()){
-                       $myfile = $media_post['post_file'];
-                        if (!empty($myfile)) {
-                            $ext = explode(".", $myfile);
-                            if (strtolower(end($ext)) == "mp4") { }else{
-                                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
-                            }
-                        }
-                }
-                ?>
+                while ($media_post = $media_result->fetch_assoc()) {
+                    $myfile = $media_post['post_file'];
+                    if (!empty($myfile)) {
+                        $ext = explode(".", $myfile);
+                        if (strtolower(end($ext)) == "mp4") {
+                        } else {
+                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                            ?>
             </div>
-            <?php
-       }
+<?php
+        }
     }
 }
 
 // any user show following list
-if(isset($_REQUEST['following_users'])){
+if (isset($_REQUEST['following_users'])) {
     $userID = isset($_POST['userid']) ? $_POST['userid'] : "";
     $loginUserid = $_SESSION['login_user_id'];
 
@@ -1289,7 +1329,7 @@ if(isset($_REQUEST['following_users'])){
 
 
 // any user show following list
-if(isset($_REQUEST['followers_users'])){
+if (isset($_REQUEST['followers_users'])) {
     $userID = isset($_POST['userid']) ? $_POST['userid'] : "";
     $loginUserid = $_SESSION['login_user_id'];
 
@@ -1300,6 +1340,48 @@ if(isset($_REQUEST['followers_users'])){
                                     WHERE tf.followers = $userID";
 
     $following_result = mysqli_query($conn, $followingUsersQuery);
-    include 'layout/followers_info.php';    
+    include 'layout/followers_info.php';
 }
+
+if (isset($_REQUEST['follow_other_profile_id'])) {
+    $opponent_id = isset($_POST['follow_other_profile_id']) ? $_POST['follow_other_profile_id'] : "";
+    $userId = $_SESSION['login_user_id'];
+
+    // Check if already followed
+    $isFollowing = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+
+    if ($isFollowing) {
+        // Unfollow
+        mysqli_query($conn, "DELETE FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'");
+    } else {
+        // Follow
+        mysqli_query($conn, "INSERT INTO twitter_followers(followers, following) VALUES ('$opponent_id','$userId')");
+    }
+
+    // Recheck relationship status
+    $iFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'")) > 0;
+    $theyFollow = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM twitter_followers WHERE followers = '$userId' AND following = '$opponent_id'")) > 0;
+
+    $status = "Follow";
+    if ($iFollow && $theyFollow) {
+        $status = "Following"; // Mutual or you're already following
+    } elseif ($iFollow) {
+        $status = "Following";
+    } elseif ($theyFollow) {
+        $status = "Follow Back";
+    }
+
+    // Counts
+    $following = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId"));
+    $followers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $userId"));
+
+    echo json_encode([
+        'following_count' => $following['total'],
+        'followers_count' => $followers['total'],
+        'status' => $status
+    ]);
+}
+
+//Notification work
+
 ?>

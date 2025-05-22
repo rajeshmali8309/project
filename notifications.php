@@ -8,6 +8,15 @@ if(isset($_SESSION["userid"])){ ?>
     include 'layout/header.php';
     ?>
     <title>Notifications / X</title>
+    <style>
+        .rightbar{
+            margin-right: 58px;
+            right: -17px;
+        }
+        .post {
+            width: 648px;
+        }
+    </style>
 </head>
 <body>
     <div class="pagecontainer">
@@ -29,16 +38,7 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
 
             <div class="center-content" style="padding: 140px 0px;">
-                <div class="notification-all-center">
-                    <div class="ntf-logo">
-                        <img src="image\logo.svg" alt="No logo">
-                    </div>
-                    <div>
-                        <span>There was a login to your account @Rajeshmali7721 from a new device on Apr 25, 2025.Review it now.</span>
-                    </div>
-                </div>
-                
-                <div class="notify-like">
+                <div class="post">
                     <div class="like-notification">
                         <div><img src="image/like.jpg" alt="" width="20" style="margin-top: 7px; margin-right: 7px;"></div>
                         <div class="like-profile-img"><img src="image/dp.jpg" alt="" width="35"></div>
@@ -49,10 +49,11 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
         </div>
         
-        <?php
-            // include file of notification center part
-            include 'layout/notification_footer_right.php';
-        ?>
+        <div class="rightbar">
+            <?php 
+              include 'layout/right_footer.php'; 
+            ?>
+        </div>
     </div>
     <?php include 'layout/post_model.php'; ?>
 </body>

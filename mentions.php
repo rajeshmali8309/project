@@ -8,6 +8,19 @@ if(isset($_SESSION["userid"])){ ?>
     include 'layout/header.php';
     ?>
     <title>Notifications / X</title>
+    <style>
+        .rightbar{
+            margin-right: 58px;
+            right: -17px;
+        }
+        .post {
+            width: 648px;
+        }
+
+        .might-like{
+            margin-top: 6px;
+        }
+    </style>
 </head>
 <body>
     <div class="pagecontainer">
@@ -36,10 +49,12 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
         </div>
         
-        <?php
-            // include file of notification center part
-            include 'layout/notification_footer_right.php';
-        ?>
+        <div class="rightbar">
+            <?php 
+              include 'layout/footer.php';
+              include 'layout/right_footer.php'; 
+            ?>
+        </div>
     </div>
 </body>
 <script>
