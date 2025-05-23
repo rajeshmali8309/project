@@ -9,7 +9,8 @@ include 'login_user_data.php';
     <div class="page-links">
         <a href="index.php" id="home"><i class="fa-solid fa-house"></i> Home</a>
         <a href="" id="explore"><i class="fa-solid fa-magnifying-glass"></i> Explore</a>
-        <a href="notifications.php" id="notification"><i class="fa-regular fa-bell"></i> Notifications</a>
+        <a href="notifications.php" id="notification"><i class="fa-regular fa-bell"></i> Notifications 
+        <span class="show-notificatio-count"><i class="fa-solid fa-circle"></i></span></a>
         <a href="" id="messages"><i class="fa-regular fa-envelope"></i> Messages</a>
         <a href="" style="padding-left: 8px;" id="grok"><img src="image/grok.png" alt="" width="30"> Grok</a>
         <a href="" id="communities"><i class="fa-solid fa-people-group"></i> Communities</a>
@@ -21,14 +22,14 @@ include 'login_user_data.php';
         <div class="avatar">
             <?php if(empty($userDAta['profile_picture'])){
                 echo $_SESSION['firstchr'];
-            }else{
+            } else {
                 ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="dp" alt="No-dp" width="100%" height="100%"> <?php
-            }?></div>
+            } ?></div>
         <div>
             <div style="color:black; font-size: 18px;"><strong><?php echo $userDAta['name']?></strong></div>
             <div style="color: rgb(95, 94, 94);; font-size: 15px;">@<?php if(isset($_SESSION['userid'])){ echo $_SESSION['userid']; }?></div>
         </div>
-        <span style=""><a><i class="fa-solid fa-ellipsis"></i></a></span>
+        <span><a><i class="fa-solid fa-ellipsis"></i></a></span>
     </div>
 
     <div class="logout-section">

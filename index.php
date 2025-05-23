@@ -49,9 +49,10 @@ if(isset($_SESSION["userid"])){ ?>
 
                 <div id="Following"><span id="following"> Following </span></div>
 
-                <div class="search-box">
-                  <input type="text" placeholder="🔍︎ Search" id="search">
-                </div>
+                <?php
+                include 'layout/search_bar.php'; 
+                ?>
+                
             </div>
 
             <div class="center-content" style="padding-top: 56px;">

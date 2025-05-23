@@ -37,15 +37,8 @@ if(isset($_SESSION["userid"])){ ?>
                 <a href="mentions.php">Mentions</a>
             </div>
 
-            <div class="center-content" style="padding: 140px 0px;">
-                <div class="post">
-                    <div class="like-notification">
-                        <div><img src="image/like.jpg" alt="" width="20" style="margin-top: 7px; margin-right: 7px;"></div>
-                        <div class="like-profile-img"><img src="image/dp.jpg" alt="" width="35"></div>
-                        <!-- <div class="like-profile">K</div> -->
-                    </div>
-                    <p><span style="color:black;font-weight: bold; margin-left: 37px;">Ravi Mali </span>liked your reply</p>
-                </div>
+            <div class="center-content" id="notifications_data" style="padding: 140px 0px;">
+                <!-- show notifications -->
             </div>
         </div>
         
@@ -61,6 +54,22 @@ if(isset($_SESSION["userid"])){ ?>
     $(".trending-section").css({"margin-top":"64px"});
     $(document).ready(function () {
         $("#notification").addClass("sidebar-activepage");
+        // show notification data using function
+        function showNotifications(){
+            var usernotification = "n";
+            $.ajax({
+                url: "controller.php",
+                type: 'post',
+                data: {
+                    "other_notifications_show": usernotification
+                },
+                success: function(response) {
+                    $("#notifications_data").html(response);
+                }
+            });
+        }
+
+        showNotifications();
     });
 </script>
 </html>

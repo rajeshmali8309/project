@@ -65,6 +65,10 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
                 margin-left: 400px;
                 padding: 3px 14px;
             }
+
+            .search-box{
+                margin-left: 670px;
+            }
         </style>
     </head>
 
@@ -130,9 +134,9 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
                             </span>
                         </span></div>
 
-                    <div class="search-box" style="margin-left: 670px;">
-                        <input type="text" placeholder="🔍︎ Search" id="search">
-                    </div>
+                    <?php
+                        include 'layout/search_bar.php'; 
+                    ?>
                 </div>
 
                 <div class="center-content" style="padding-top: 56px;">

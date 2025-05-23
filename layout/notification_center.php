@@ -4,7 +4,7 @@
         <span class="gearicon"><img src="image/setting-icon.png" width="20"></span>
     </div>
 
-    <div class="search-box">
-        <input style="width: 97%;" type="text" placeholder="🔍︎ Search" id="search">
-    </div>
+    <?php
+        include 'layout/search_bar.php'; 
+    ?>
 </div>

@@ -1061,6 +1061,42 @@ $(document).ready(function () {
     $(document).on("mouseleave", ".other-profile-follow-btn.other-user_follow-btn", function () {
         $(this).removeClass("hovering-other").text("Following");
     });
+
+    // search userdata jquery
+   $(document).on('focus', '#search', function () {
+        $('#search-popup').fadeIn();
+    });
+
+    $(document).on('blur', '#search', function () {
+        setTimeout(function () {
+            $('#search-popup').fadeOut();
+        }, 200);
+    });
+
+    // search on keyup    
+    $(document).on('keyup', '#search', function () {
+        let searchVal = $(this).val().trim();
+
+        if (searchVal === '') {
+            $('#search-popup').html('<div id="search-message">Try searching for people</div>');
+        } else {
+            searchUsers(searchVal); // call function for search value 
+        }
+    });
+
+    // ajax request for search ...
+    function searchUsers(searchData) {
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "search_input_data": searchData,
+            },
+            success: function (result) {
+                $("#search-popup").html(result);
+            }
+        });
+    }
 });
 
 function postCharCount() {
@@ -1085,3 +1121,25 @@ function commentCharCount() {
 function otherUserProfile(otherUserId){
     window.location.href="other_user_profile.php?username="+otherUserId;
 }
+
+function notificationCount() {
+    value = "is_read_notification";
+    $.ajax({
+        url: 'controller.php',
+        method: 'POST',
+        data: {
+            "is_read_notification": value,
+        },
+        dataType: 'json',
+        success: function (result) {
+            if (result.unread_count !== '0') {
+                $(".show-notificatio-count").css({"display":"block"});
+                $(".show-notificatio-count").html('<i class="fa-solid fa-circle"> ' +result.unread_count +'</i>');
+            } else {
+                $(".show-notificatio-count").css({"display":"none"});
+            }
+        }
+    });
+}
+setInterval(notificationCount, 200);
+

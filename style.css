@@ -1924,3 +1924,73 @@
 .other-user_follow-btn.hovering-other {
     color: red !important;
 }
+
+.search-popup {
+    position: absolute;
+    top: 105%; /* thoda niche khule input ke */
+    width: 100%;
+    background: white; /* dark theme jaise Twitter */
+    border: 1px solid rgb(185, 181, 181);
+    border-radius: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 999;
+    display: none; /* default me band rahega */
+}
+
+/* search user item styling */
+.search-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.search-user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info span:first-child {
+    font-weight: bold;
+    color: rgb(15, 15, 15);
+}
+
+.user-info span:last-child {
+    color: gray;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#search-message {
+    color: gray;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.search-firstchar{
+    margin: 0px;
+    padding: 6px 15px;
+    background-color: rgb(247, 115, 7);
+    border-radius: 50%;
+    color: white;
+    font-weight: 500;
+}
+
+.show-notificatio-count{
+    color: rgb(34, 154, 252);
+    font-size: 10px;
+    display: block;
+}
+
+.delete-notification-icon{
+    margin-left: auto;
+    cursor: pointer;
+}

@@ -67,9 +67,9 @@ if(isset($_SESSION["userid"])){ ?>
             </div>
                 <div class="followers-list"><span id="followers-active">Followers</span></div>
                 <div class="following-list"><span id="following-active"> Followings</span></div>
-                <div class="search-box">
-                  <input type="text" placeholder="🔍︎ Search" id="search">
-                </div>
+                <?php
+                    include 'layout/search_bar.php'; 
+                ?>
             </div>
 
             <!-- following user details -->
