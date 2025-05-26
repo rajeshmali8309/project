@@ -1,7 +1,7 @@
-<div id="post-comment-modal-overlay" class="comment-modal-overlay">
-    <div class="comment-modal-box">
-        <span class="close-comment-modal">&times;</span>
-        <form class="comment-post-form" id="cmt-form" enctype="multipart/form-data" method="post">
+<div id="post-reply-modal-overlay" class="reply-modal-overlay">
+    <div class="reply-modal-box">
+        <span class="close-reply-modal">&times;</span>
+        <form class="reply-post-form" id="reply-form" enctype="multipart/form-data" method="post">
             <div class="input-post">
                 <?php
                     include 'login_user_data.php';
@@ -12,23 +12,24 @@
                     }
                 ?>
                 <div class="happening-input">
-                    <p class="cmt-username"><?php echo $userDAta['name'];?> 
+                    <p class="reply-username"><?php echo $userDAta['name'];?> 
                         <span style="font-weight: 400;">@<?php echo $userDAta['username'];?>. <?php echo date("F Y", strtotime($userDAta['join_date'])); ?></span>
                     </p>
                 </div>
             </div>
-            <p id="comment-error"></p>
-            <div class="comment-input">
-                <input type="text" class="post-comment" maxlength="100" id="post_comment" name="comment_msg" oninput="commentCharCount()" placeholder="Add Comment">
-                <span style="margin: 8px;" id="Countcomment-length">0/160</span>
+            <p id="reply-error"></p>
+            <div class="reply-input">
+                <input type="text" class="post-reply" maxlength="100" id="post_reply" name="reply_msg" oninput="replyCharCount()" placeholder="Add Reply">
+                <span style="margin: 8px;" id="Countreply-length">0/160</span>
                 <input type="hidden" name="user_id" value="<?php echo $userDAta['id']; ?>">
-                <input type="hidden" id="comment-post-id"> 
+                <input type="hidden" id="reply-post-id" value=""> 
+                <input type="hidden" id="post-id-val" value=""> 
             </div>
 
             <div class="post-options">
-                <button id="left-comment-btn" type="submit">Post</button>
-                <p id="errorPost"></p>
-                <h4 class="success-msg"></h3>
+                <button id="left-reply-btn" type="submit">Reply</button>
+                <p id="errorreplyPost"></p>
+                <h4 class="replysuccess-msg"></h3>
             </div>
         </form>
     </div>

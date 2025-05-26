@@ -755,6 +755,10 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('focus', '.left-post-discription', function () {
+        $(".errorPost").text("");
+    });
+
     // Post validation & Post Insert...
     $(document).on("submit", ".left-post-form", function (event) {
         event.preventDefault();
@@ -825,6 +829,78 @@ $(document).ready(function () {
                     icon.removeClass('fa-solid text-pink fa-heart').addClass('fa-regular fa-heart');
                 }
                 $(".text-pink").css({ "color": "rgb(231, 14, 50);" });
+            }
+        });
+    });
+
+
+    // comment like
+    $(document).on('click', '.like-comment', function (e) {
+        e.preventDefault();
+        let commentID = $(this).data('comment-id'); // comment id
+        let likeBtn = $(this); // like button
+
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "comment_like_insert": commentID,
+                "comment_id": commentID
+            },
+            success: function (result) {
+                let response = JSON.parse(result);
+
+                // Like count update
+                if (response.like_count == 0) {
+                    likeBtn.find('.comment-like-count').text("");
+                } else {
+                    likeBtn.find('.comment-like-count').text(response.like_count);
+                }
+
+                // Icon change like/unlike
+                let icon = likeBtn.find('i');
+                if (response.liked) {
+                    icon.removeClass('fa-regular fa-heart').addClass('fa-solid text-pink fa-heart');
+                } else {
+                    icon.removeClass('fa-solid text-pink fa-heart').addClass('fa-regular fa-heart');
+                }
+                $(".text-pink").css({ "color": "rgb(231, 14, 50);" });
+            }
+        });
+    });
+
+    // comment like
+    $(document).on('click', '.like-reply', function (e) {
+        e.preventDefault();
+        let replyId = $(this).data('comment-id'); // comment id
+        let likeBtn = $(this); // like button
+
+        $.ajax({
+            url: 'controller.php',
+            method: 'POST',
+            data: {
+                "reply_like_insert": replyId,
+                "reply_id": replyId
+            },
+            success: function (result) {
+                $("#outPut").html(result);
+                // let response = JSON.parse(result);
+
+                // // Like count update
+                // if (response.like_count == 0) {
+                //     likeBtn.find('.comment-like-count').text("");
+                // } else {
+                //     likeBtn.find('.comment-like-count').text(response.like_count);
+                // }
+
+                // // Icon change like/unlike
+                // let icon = likeBtn.find('i');
+                // if (response.liked) {
+                //     icon.removeClass('fa-regular fa-heart').addClass('fa-solid text-pink fa-heart');
+                // } else {
+                //     icon.removeClass('fa-solid text-pink fa-heart').addClass('fa-regular fa-heart');
+                // }
+                // $(".text-pink").css({ "color": "rgb(231, 14, 50);" });
             }
         });
     });
@@ -1097,6 +1173,65 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Open reply model 
+    $(document).on('click', '.reply-post', function (e) {
+        e.preventDefault();
+        $("#reply-form")[0].reset();
+        $("#Countreply-length").text("");
+        $(".left-post-discription").text("");
+        $("#post-reply-modal-overlay").fadeIn(300);
+        var comment_id = $(this).data('comment-id');
+        $("#reply-post-id").val(comment_id);
+    });
+
+    $("#post_reply").focus(function(){
+        $("#errorreplyPost").text("");
+    });
+
+    $(document).on('click', '#left-reply-btn', function (e) {
+        $("#Countreply-length").text("");
+        e.preventDefault();
+        var post_id = $("#send-post-id").val();
+        var commentID = $("#reply-post-id").val();
+        var comment_val = $("#post_reply").val();
+        var comment_btn = $('.reply-post[data-comment-id="' + commentID + '"]');
+
+
+        if(comment_val === ''){
+            $("#errorreplyPost").text("your reply is empty...!");
+        }else{
+            $("#errorreplyPost").text("");
+            $.ajax({
+                url: 'controller.php',
+                method: 'POST',
+                data: {
+                    "post_reply_insert": commentID,
+                    "post_id": post_id,
+                    "comment_id": commentID,
+                    "reply_value": comment_val
+                },
+                success: function (replyResult) {
+                    let response = JSON.parse(replyResult); 
+                    console.log(response.reply_count);
+
+                    // comment count update
+                    if (response.comment_count == 0) {
+                        comment_btn.find('.reply-count').text("");
+                    } else {
+                        comment_btn.find('.reply-count').text(response.reply_count);
+                    }
+                    $("#post-reply-modal-overlay").fadeOut(300);
+                }
+            });
+        }
+    });
+
+    $(document).on("click", ".close-reply-modal", function () {
+        $("#reply-form")[0].reset();
+        $("#Countreply-length").text("");
+        $("#post-reply-modal-overlay").fadeOut(300);   
+    });
 });
 
 function postCharCount() {
@@ -1114,6 +1249,12 @@ function postdecCount() {
 function commentCharCount() {
     var posttext = document.getElementById('post_comment');
     var count = document.getElementById('Countcomment-length');
+    count.textContent = `${posttext.value.length} / 100`;
+}
+
+function replyCharCount() {
+    var posttext = document.getElementById('post_reply');
+    var count = document.getElementById('Countreply-length');
     count.textContent = `${posttext.value.length} / 100`;
 }
 

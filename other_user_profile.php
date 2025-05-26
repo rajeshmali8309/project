@@ -53,7 +53,7 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
             }
 
             .first_char {
-                padding: 7px 28px;
+                padding: 10px 17px 10px 30px;
             }
 
             #profile-dp-show {

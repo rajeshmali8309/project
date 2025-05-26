@@ -9,7 +9,7 @@
             }
         ?>
         <div class="happening-input">
-            <input type="text" class="left-post-discription" maxlength="240" id="index-post_description" oninput="postdecCount()" placeholder="What's happening?">
+            <input type="text" name="index_heppening_input" class="left-post-discription" maxlength="240" id="index-post_description" oninput="postdecCount()" placeholder="What's happening?">
             <input type="hidden" name="user_id" value="<?php echo $userDAta['id']; ?>">
         </div>
         <div id="charcount"></div>

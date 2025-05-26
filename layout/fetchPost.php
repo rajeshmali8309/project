@@ -217,10 +217,19 @@ if (isset($_REQUEST['foryou_data'])) {
             <div class="post">
                 <div class="post-information">
                     <?php if (empty($post['profile_picture'])) { ?>
-                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><span><?php echo $fstChar; ?></span></a>
+                        <a style="text-decoration: none; color:black;"
+                            href="other_user_profile.php?username=<?php echo $post['username']; ?>">
+                            <span>
+                                <?php echo $fstChar; ?>
+                            </span>
+                       </a>
                     <?php } else {
-                    ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
-                                                                                                                                                                                                                            } ?>
+                    ?> 
+                    <a style="text-decoration: none; color:black;"
+                        href="other_user_profile.php?username=<?php echo $post['username']; ?>">
+                        <img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file">
+                    </a><?php
+                    } ?>
                     <p>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><b style="color:black;"><?php echo $post['name'] ?> </b></a>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>">@<?php echo $post['username'] ?></a>
@@ -262,20 +271,26 @@ if (isset($_REQUEST['foryou_data'])) {
                                         echo "fa-solid text-pink fa-heart";
                                     } else {
                                         echo "fa-regular fa-heart";
-                                    } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
-                                                                        echo $likeData['total'];
-                                                                    } else {
-                                                                        echo "";
-                                                                    } ?></span>
+                                    } ?>">
+                                <span class="like-count">
+                                    <?php if (!empty($likeData['total'])) {
+                                        echo $likeData['total'];
+                                    } else {
+                                        echo "";
+                                    } ?>
+                                </span>
                         </i>
                     </a>
 
                     <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
-                                                                                            echo $commentData['total'];
-                                                                                        } else {
-                                                                                            echo "";
-                                                                                        } ?></span>
+                        <i class="fa-regular fa-comment">
+                             <span class="comment-count">
+                                <?php if (!empty($commentData['total'])) {
+                                    echo $commentData['total'];
+                                } else {
+                                    echo "";
+                                } ?>
+                            </span>
                         </i>
                     </a>
                 </div>
@@ -1133,6 +1148,58 @@ if (isset($_REQUEST['post_like_insert'])) {
 
     //like Count 
     $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $postId";
+    $LikeCount = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($LikeCount);
+
+    echo json_encode([
+        'like_count' => $data['total'],
+        'liked' => $liked
+    ]);
+}
+
+// like insert & Count operation on ajax request
+if (isset($_REQUEST['comment_like_insert'])) {
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['comment_id'];
+    $current_user_name = $_SESSION['userid'];
+
+    // find comment id to userid
+    $find_userQuery = "SELECT * FROM twitter_post_comments WHERE id = '$commentID'";
+    $userResult = mysqli_query($conn, $find_userQuery);
+    $postUser = mysqli_fetch_assoc($userResult);
+    $UserID = $postUser['user_id'];
+
+    // Check if already like
+    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$commentID' AND likeable_type = 'comment'";
+    $check = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check) > 0) {
+        // if liked to unlike
+        $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$commentID'";
+        $runResult = mysqli_query($conn, $delete_like_query);
+        if($runResult){
+            $delete_notification = "DELETE FROM `twitter_notifications` WHERE post_id = '$commentID' AND type = 'like'";
+            $delete_notification_result = mysqli_query($conn, $delete_notification);
+            $liked = false;
+        }
+    } else {
+        // insert like if not liked
+        $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `post_id`, `likeable_type`) VALUES ('$userId','$commentID','comment')";
+        $like_insert_result = mysqli_query($conn, $like_insert_query);
+        if ($like_insert_result) {
+            if ($UserID === $userId) {
+                $liked = true;
+            } else {
+                $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, post_id, type, message)
+                VALUES ('$UserID', '$userId', '$commentID', 'like', '@$current_user_name liked your comment.')";
+                $notification = mysqli_query($conn, $insert_notification);
+                $liked = true;
+            }
+        }
+    }
+
+    //like Count 
+    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $commentID";
     $LikeCount = mysqli_query($conn, $Count_query);
     $data = mysqli_fetch_assoc($LikeCount);
 
