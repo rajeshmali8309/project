@@ -138,6 +138,7 @@ if(isset($_SESSION["userid"])){ ?>
                     ?> 
                     <div class="center-content" id="notifications_data" style="padding: 68px 0px;">
                         <div class="user-post-details">
+                            <input type="hidden" class="send_opponent_id" value="<?php echo $post['user_id'];?>">
                             <input type="hidden" id="send-post-id" value="<?php echo $_REQUEST['post_id']; ?>">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
@@ -239,7 +240,7 @@ if(isset($_SESSION["userid"])){ ?>
                     u.profile_picture
                     FROM twitter_post_comments AS c
                     JOIN twitter_users AS u ON c.user_id = u.id
-                    WHERE c.post_id = $post_ID ORDER BY c.created_at DESC";
+                    WHERE c.post_id = $post_ID ORDER BY c.created_at DESC"; 
 
                     $comment_result = mysqli_query($conn, $comment_query);
 
@@ -278,6 +279,7 @@ if(isset($_SESSION["userid"])){ ?>
 
                         //like Count 
                         $post_Id = $data['comment_id'];
+                        $useridd = $_SESSION['login_user_id'];
                         $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $post_Id
                         AND likeable_type = 'comment'";
 
@@ -285,12 +287,11 @@ if(isset($_SESSION["userid"])){ ?>
                         $likeData = mysqli_fetch_assoc($LikeCount);
 
                         //comment reply Count 
-                        $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id]";
+                        $reply_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $data[comment_id] AND present_reply_id IS NULL";
                         $reply_count = mysqli_query($conn, $reply_Count_query);
                         $replydata = mysqli_fetch_assoc($reply_count);
 
                         // check login user liked post
-                        $useridd = $_SESSION['login_user_id'];
                         $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = '$post_Id'
                         AND likeable_type = 'comment'";
                         $userLiked_query = mysqli_query($conn, $query_liked_user);

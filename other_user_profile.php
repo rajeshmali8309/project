@@ -31,7 +31,7 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
             }
 
             .rightbar {
-                margin-right: 28px;
+                margin-right: 40px;
                 right: -17px;
             }
 
@@ -53,7 +53,7 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
             }
 
             .first_char {
-                padding: 10px 17px 10px 30px;
+                padding: 17px 19px 9px 33px;
             }
 
             #profile-dp-show {
@@ -68,6 +68,10 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
 
             .search-box{
                 margin-left: 670px;
+            }
+
+            .might-like{
+                margin-top: 10px;
             }
         </style>
     </head>
@@ -215,7 +219,8 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
 
             <div class="rightbar">
                 <?php
-                include 'layout/right_footer.php';
+                    include 'layout/footer.php';
+                    include 'layout/right_footer.php'; 
                 ?>
             </div>
         </div>

@@ -1,4 +1,7 @@
 <?php
+
+use Dom\Notation;
+
 include 'dbconnection.php';
 session_start();
 
@@ -217,19 +220,10 @@ if (isset($_REQUEST['foryou_data'])) {
             <div class="post">
                 <div class="post-information">
                     <?php if (empty($post['profile_picture'])) { ?>
-                        <a style="text-decoration: none; color:black;"
-                            href="other_user_profile.php?username=<?php echo $post['username']; ?>">
-                            <span>
-                                <?php echo $fstChar; ?>
-                            </span>
-                       </a>
+                        <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><span><?php echo $fstChar; ?></span></a>
                     <?php } else {
-                    ?> 
-                    <a style="text-decoration: none; color:black;"
-                        href="other_user_profile.php?username=<?php echo $post['username']; ?>">
-                        <img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file">
-                    </a><?php
-                    } ?>
+                    ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
+                                                                                                                                                                                                                            } ?>
                     <p>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><b style="color:black;"><?php echo $post['name'] ?> </b></a>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>">@<?php echo $post['username'] ?></a>
@@ -239,7 +233,11 @@ if (isset($_REQUEST['foryou_data'])) {
 
                 <div class="post-information">
                     <div>
-                        <p class="post-discription"><?php echo $post['description']; ?></p>
+                        <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
+                            <p style="cursor: pointer;" class="post-discription">
+                                <?php echo $post['description']; ?>
+                            </p>
+                        </a>
                     </div>
                 </div>
 
@@ -249,17 +247,21 @@ if (isset($_REQUEST['foryou_data'])) {
                     $ext = explode(".", $myfile);
                     if (strtolower(end($ext)) == "mp4") {
                 ?>
-                        <div class="post-img">
-                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
-                            </video>
-                        </div>
+                <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
+                    <div class="post-img" style="cursor: pointer;">
+                        <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
+                            <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
+                        </video>
+                    </div>
+                </a>
                     <?php
                     } else {
                     ?>
+                    <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
                         <div class="post-img">
                             <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="100%" height="500px">
                         </div>
+                    </a>
                     <?php
                     } ?>
                 <?php }
@@ -272,25 +274,23 @@ if (isset($_REQUEST['foryou_data'])) {
                                     } else {
                                         echo "fa-regular fa-heart";
                                     } ?>">
-                                <span class="like-count">
-                                    <?php if (!empty($likeData['total'])) {
-                                        echo $likeData['total'];
-                                    } else {
-                                        echo "";
-                                    } ?>
-                                </span>
-                        </i>
-                    </a>
-
-                    <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
-                        <i class="fa-regular fa-comment">
-                             <span class="comment-count">
-                                <?php if (!empty($commentData['total'])) {
-                                    echo $commentData['total'];
+                            <span class="like-count">
+                                <?php if (!empty($likeData['total'])) {
+                                    echo $likeData['total'];
                                 } else {
                                     echo "";
                                 } ?>
                             </span>
+                        </i>
+                    </a>
+
+                    <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
+                        <i class="fa-regular fa-comment"> <span class="comment-count">
+                                <?php if (!empty($commentData['total'])) {
+                                    echo $commentData['total'];
+                                } else {
+                                    echo "";
+                                } ?></span>
                         </i>
                     </a>
                 </div>
@@ -397,7 +397,9 @@ if (isset($_REQUEST['following_data'])) {
 
                 <div class="post-information">
                     <div>
-                        <p class="post-discription"><?php echo $post['description']; ?></p>
+                        <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
+                            <p class="post-discription"><?php echo $post['description']; ?></p>
+                        </a>
                     </div>
                 </div>
 
@@ -407,17 +409,21 @@ if (isset($_REQUEST['following_data'])) {
                     $ext = explode(".", $myfile);
                     if (strtolower(end($ext)) == "mp4") {
                 ?>
-                        <div class="post-img">
-                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
-                            </video>
-                        </div>
+                        <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
+                            <div class="post-img">
+                                <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
+                                    <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
+                                </video>
+                            </div>
+                        </a>
                     <?php
                     } else {
                     ?>
-                        <div class="post-img">
-                            <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="100%" height="500px">
-                        </div>
+                        <a href="post_reply.php?post_id=<?php echo $post["post_id"]; ?>" style="text-decoration: none;">
+                            <div class="post-img">
+                                <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="100%" height="500px">
+                            </div>
+                        </a>
                     <?php
                     } ?>
                 <?php }
@@ -430,21 +436,21 @@ if (isset($_REQUEST['following_data'])) {
                                     } else {
                                         echo "fa-regular fa-heart";
                                     } ?>"> <span class="like-count">
-                            <?php if (!empty($likeData['total'])) {
-                                echo $likeData['total'];
-                            } else {
-                                echo "";
-                            } ?></span>
+                                <?php if (!empty($likeData['total'])) {
+                                    echo $likeData['total'];
+                                } else {
+                                    echo "";
+                                } ?></span>
                         </i>
                     </a>
 
                     <a class="comment-post" data-post-id="<?= $post['post_id']; ?>">
                         <i class="fa-regular fa-comment"> <span class="comment-count">
-                            <?php if (!empty($commentData['total'])) {
-                                echo $commentData['total'];
-                            } else {
-                                echo "";
-                            } ?></span>
+                                <?php if (!empty($commentData['total'])) {
+                                    echo $commentData['total'];
+                                } else {
+                                    echo "";
+                                } ?></span>
                         </i>
                     </a>
                 </div>
@@ -607,9 +613,11 @@ if (isset($_REQUEST['Profilepage'])) {
                     </div>
 
                     <div class="post-information">
-                        <div>
-                            <p class="post-discription"><?php echo $post['description']; ?></p>
-                        </div>
+                        <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
+                            <div>
+                                <p class="post-discription"><?php echo $post['description']; ?></p>
+                            </div>
+                        </a>
                     </div>
 
                     <?php
@@ -618,28 +626,23 @@ if (isset($_REQUEST['Profilepage'])) {
                         $ext = explode(".", $myfile);
                         if (strtolower(end($ext)) == "mp4") {
                     ?>
-                            <div class="post-img">
-                                <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                    <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
-                                </video>
-                            </div>
+                    <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
+                        <div class="post-img">
+                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
+                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
+                            </video>
+                        </div>
+                    </a>
                         <?php
                         } else {
                         ?>
-                            <div class="post-img">
-                                <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
-                            </div>
+                            <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
+                                <div class="post-img">
+                                    <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
+                                </div>
+                            </a>
                         <?php
                         } ?>
-
-                        <!-- <div class="post-img">
-                            <img src="posts/?php echo $post['post_file'];?>" alt="No post file" width="97%" height="450px">
-                        </div> -->
-                        <!-- <div class="post-img">
-                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                <source src="posts/ echo $post['post_file'];?>" type="video/mp4">
-                            </video>
-                        </div> -->
                     <?php }
                     ?>
 
@@ -649,19 +652,24 @@ if (isset($_REQUEST['Profilepage'])) {
                                             echo "fa-solid text-pink fa-heart";
                                         } else {
                                             echo "fa-regular fa-heart";
-                                        } ?>"> <span class="like-count"><?php if (!empty($likeData['total'])) {
-                                                                            echo $likeData['total'];
-                                                                        } else {
-                                                                            echo "";
-                                                                        } ?></span></i>
+                                        } ?>">
+                                <span class="like-count">
+                                    <?php if (!empty($likeData['total'])) {
+                                        echo $likeData['total'];
+                                    } else {
+                                        echo "";
+                                    } ?></span>
+                            </i>
                         </a>
 
                         <a class="comment-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
-                                                                                                echo $commentData['total'];
-                                                                                            } else {
-                                                                                                echo "";
-                                                                                            } ?></span></i>
+                            <i class="fa-regular fa-comment"> <span class="comment-count">
+                                    <?php if (!empty($commentData['total'])) {
+                                        echo $commentData['total'];
+                                    } else {
+                                        echo "";
+                                    } ?></span>
+                            </i>
                         </a>
                     </div>
 
@@ -930,25 +938,6 @@ if (isset($_REQUEST['profile_page_record'])) {
 
             $result = mysqli_query($conn, $followingUsersQuery);
             ?>
-            <div class="overlay-bg"></div>
-            <div class="user-list-popup">
-                <div class="close-user-follow-show"><span class="close-user-follow">Close</span></div>
-                <div class="popup-header-follow">@<?php echo $userDAta['username']; ?> -><span class="popup-label"><b><?php echo $following['total']; ?> </b>Following</span></div>
-                <?php
-                while ($user = mysqli_fetch_assoc($result)) {
-                    $firstChar = strtoupper(substr($user['name'], 0, 1)); ?>
-                    <div class="user-item">
-                        <img src="profile_pic/<?php echo $user['profile_picture'] ?>" class="user-dp" alt="User DP">
-                        <div class="user-info">
-                            <div class="user-name"><?php echo $user['name']; ?></div>
-                            <div class="user-username">@<?php echo $user['username']; ?></div>
-                        </div>
-                        <button class="follow-btn-list">Following</button>
-                    </div>
-                <?php }
-                ?>
-                <!-- More items if needed... -->
-            </div>
             <div class="profile-links-btn">
                 <a id="Posts" class="profile-links-active">Posts</a>
                 <a id="Replies">Replies</a>
@@ -975,7 +964,7 @@ if (isset($_REQUEST['profile_page_record'])) {
 
             $all_users = "SELECT * FROM twitter_users WHERE id != '$useridd'
               AND id NOT IN ( SELECT followers FROM twitter_followers WHERE following = '$useridd')
-               LIMIT $offset,$Limit";
+              LIMIT $offset,$Limit";
 
             $users_result = mysqli_query($conn, $all_users);
             while ($userinfo = $users_result->fetch_assoc()) {
@@ -1033,7 +1022,7 @@ if (isset($_REQUEST['profile_page_record'])) {
                     <div class="banner">
                         <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
                         <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
-                        <span class="remove-banner">Remove</span>
+                        <!-- <span class="remove-banner">Remove</span> -->
                         <span class="fileerror"></span>
                         <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
                         <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
@@ -1097,7 +1086,7 @@ if (isset($_REQUEST['profile_page_record'])) {
 // Post insert operation on ajax request
 if (isset($_REQUEST['user_post_insert'])) {
     $user_id = trim(isset($_POST['user_id']) ? $_POST['user_id'] : "");
-    $Description = trim(isset($_POST['post_description']) ? $_POST['post_description'] : "");
+    $Description = trim(isset($_POST['index_heppening_input']) ? $_POST['index_heppening_input'] : "");
     $PostFile = '';
 
     // for post file
@@ -1122,27 +1111,40 @@ if (isset($_REQUEST['user_post_insert'])) {
 if (isset($_REQUEST['post_like_insert'])) {
     $userId = $_SESSION['login_user_id'];
     $postId = $_POST['post_id'];
-    $current_user = $_SESSION['userid'];
+    $current_user_name = $_SESSION['userid'];
+
+    // find postid to userid
+    $find_userQuery = "SELECT * FROM twitter_posts WHERE id = '$postId'";
+    $userResult = mysqli_query($conn, $find_userQuery);
+    $postUser = mysqli_fetch_assoc($userResult);
+    $UserID = $postUser['user_id'];
 
     // Check if already like
-    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId'";
+    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId' AND likeable_type = 'post'";
     $check = mysqli_query($conn, $check_query);
 
     if (mysqli_num_rows($check) > 0) {
         // if liked to unlike
         $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$postId'";
-        mysqli_query($conn, $delete_like_query);
-        $liked = false;
+        $runResult = mysqli_query($conn, $delete_like_query);
+        if($runResult){
+            $delete_notification = "DELETE FROM `twitter_notifications` WHERE post_id = '$postId' AND type = 'like'";
+            $delete_notification_result = mysqli_query($conn, $delete_notification);
+            $liked = false;
+        }
     } else {
         // insert like if not liked
         $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `post_id`, `likeable_type`) VALUES ('$userId','$postId','post')";
         $like_insert_result = mysqli_query($conn, $like_insert_query);
         if ($like_insert_result) {
-            // $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, type, message) 
-            // VALUES ('$postId', '$userId', 'like', '@$current_user liked your post.')";
-
-            // $notification = mysqli_query($conn, $insert_notification);
-            $liked = true;
+            if ($UserID === $userId) {
+                $liked = true;
+            } else {
+                $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, post_id, type, message)
+                VALUES ('$UserID', '$userId', '$postId', 'like', '@$current_user_name liked your post.')";
+                $notification = mysqli_query($conn, $insert_notification);
+                $liked = true;
+            }
         }
     }
 
@@ -1157,7 +1159,7 @@ if (isset($_REQUEST['post_like_insert'])) {
     ]);
 }
 
-// like insert & Count operation on ajax request
+// comment like insert & Count operation on ajax request
 if (isset($_REQUEST['comment_like_insert'])) {
     $userId = $_SESSION['login_user_id'];
     $commentID = $_POST['comment_id'];
@@ -1170,12 +1172,12 @@ if (isset($_REQUEST['comment_like_insert'])) {
     $UserID = $postUser['user_id'];
 
     // Check if already like
-    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$commentID' AND likeable_type = 'comment'";
+    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'comment'";
     $check = mysqli_query($conn, $check_query);
 
     if (mysqli_num_rows($check) > 0) {
         // if liked to unlike
-        $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND post_id = '$commentID'";
+        $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'comment'";
         $runResult = mysqli_query($conn, $delete_like_query);
         if($runResult){
             $delete_notification = "DELETE FROM `twitter_notifications` WHERE post_id = '$commentID' AND type = 'like'";
@@ -1184,7 +1186,7 @@ if (isset($_REQUEST['comment_like_insert'])) {
         }
     } else {
         // insert like if not liked
-        $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `post_id`, `likeable_type`) VALUES ('$userId','$commentID','comment')";
+        $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `liked_id`, `likeable_type`) VALUES ('$userId','$commentID','comment')";
         $like_insert_result = mysqli_query($conn, $like_insert_query);
         if ($like_insert_result) {
             if ($UserID === $userId) {
@@ -1198,13 +1200,65 @@ if (isset($_REQUEST['comment_like_insert'])) {
         }
     }
 
-    //like Count 
-    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE post_id = $commentID";
+    // Like count
+    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $commentID AND likeable_type = 'comment'";
     $LikeCount = mysqli_query($conn, $Count_query);
     $data = mysqli_fetch_assoc($LikeCount);
 
     echo json_encode([
         'like_count' => $data['total'],
+        'liked' => $liked
+    ]);
+}
+
+// comment like insert & Count operation on ajax request
+if (isset($_REQUEST['reply_like_insert'])) {
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['reply_id'];
+    $current_user_name = $_SESSION['userid'];
+
+    // find comment id to userid
+    $find_userQuery = "SELECT * FROM twitter_post_comments_reply WHERE id = '$commentID'";
+    $userResult = mysqli_query($conn, $find_userQuery);
+    $postUser = mysqli_fetch_assoc($userResult);
+    $UserID = $postUser['user_id'];
+
+    // Check if already like
+    $check_query = "SELECT * FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'reply'";
+    $check = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check) > 0) {
+        // if liked to unlike
+        $delete_like_query = "DELETE FROM twitters_post_likes WHERE user_id = '$userId' AND liked_id = '$commentID' AND likeable_type = 'reply'";
+        $runResult = mysqli_query($conn, $delete_like_query);
+        if($runResult){
+            $delete_notification = "DELETE FROM `twitter_notifications` WHERE post_id = '$commentID' AND type = 'like'";
+            $delete_notification_result = mysqli_query($conn, $delete_notification);
+            $liked = false;
+        }
+    } else {
+        // insert like if not liked
+        $like_insert_query = "INSERT INTO twitters_post_likes (`user_id`, `liked_id`, `likeable_type`) VALUES ('$userId','$commentID','reply')";
+        $like_insert_result = mysqli_query($conn, $like_insert_query);
+        if ($like_insert_result) {
+            if ($UserID === $userId) {
+                $liked = true;
+            } else {
+                $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, post_id, type, message)
+                VALUES ('$UserID', '$userId', '$commentID', 'like', '@$current_user_name liked your reply.')";
+                $notification = mysqli_query($conn, $insert_notification);
+                $liked = true;
+            }
+        }
+    }
+
+    // Like count
+    $Count_query = "SELECT COUNT(*) AS total FROM twitters_post_likes WHERE liked_id = $commentID AND likeable_type = 'reply'";
+    $LikeCount = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($LikeCount);
+
+    echo json_encode([
+        'reply_like_count' => $data['total'],
         'liked' => $liked
     ]);
 }
@@ -1229,6 +1283,55 @@ if (isset($_REQUEST['post_comment_insert'])) {
 
     echo json_encode([
         'comment_count' => $data['total'],
+    ]);
+}
+
+// reply insert & Count operation on ajax request
+if (isset($_REQUEST['post_reply_insert'])) {
+    $reply_value = trim(isset($_POST['reply_value']) ? $_POST['reply_value'] : "");
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['comment_id'];
+    $PostID = $_POST['post_id'];
+
+    // insert comment
+    $reply_insert_query = "INSERT INTO twitter_post_comments_reply (`user_id`, `post_id`, `comment_id`, `comment_reply`) VALUES ('$userId','$PostID','$commentID', '$reply_value')";
+    $reply_insert_result = mysqli_query($conn, $reply_insert_query);
+    if ($reply_insert_result) {
+        $reply = true;
+    }
+
+    //reply Count 
+    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $commentID AND present_reply_id IS NULL";
+    $reply_count = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($reply_count);
+
+    echo json_encode([
+        'reply_count' => $data['total'],
+    ]);
+}
+
+//   reply insert and count reply on comment reply 
+if (isset($_REQUEST['comment_reply_insert'])) {
+    $reply_value = trim(isset($_POST['reply_value']) ? $_POST['reply_value'] : "");
+    $userId = $_SESSION['login_user_id'];
+    $commentID = $_POST['comment_id'];
+    $PostID = $_POST['post_id'];
+    $reply_id = $_POST['reply_id'];
+
+    // insert reply
+    $reply_insert_query = "INSERT INTO twitter_post_comments_reply (`user_id`, `post_id`, `comment_id`, `comment_reply`, `present_reply_id`) VALUES ('$userId','$PostID','$commentID', '$reply_value', '$reply_id')";
+    $reply_insert_result = mysqli_query($conn, $reply_insert_query);
+    if ($reply_insert_result) {
+        $reply = true;
+    }
+
+    //reply Count 
+    $Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments_reply WHERE comment_id = $commentID AND present_reply_id = '$reply_id' ";
+    $reply_count = mysqli_query($conn, $Count_query);
+    $data = mysqli_fetch_assoc($reply_count);
+
+    echo json_encode([
+        'reply_count' => $data['total'],
     ]);
 }
 
@@ -1309,9 +1412,11 @@ if (isset($_REQUEST['other_Profile_page'])) {
                     </div>
 
                     <div class="post-information">
-                        <div>
-                            <p class="post-discription"><?php echo $post['description']; ?></p>
-                        </div>
+                        <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
+                            <div>
+                                <p class="post-discription"><?php echo $post['description']; ?></p>
+                            </div>
+                        </a>                        
                     </div>
 
                     <?php
@@ -1320,17 +1425,22 @@ if (isset($_REQUEST['other_Profile_page'])) {
                         $ext = explode(".", $myfile);
                         if (strtolower(end($ext)) == "mp4") {
                     ?>
-                            <div class="post-img">
-                                <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
-                                    <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
-                                </video>
-                            </div>
+                    <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
+                        <div class="post-img">
+                            <video width="100%" height="600px" type="video/mp4" alt="No post file" controls>
+                                <source src="posts/<?php echo $post['post_file']; ?>" type="video/mp4">
+                            </video>
+                        </div>
+                    </a>
+                            
                         <?php
                         } else {
                         ?>
+                        <a href="post_reply.php?post_id=<?php echo $post["id"]; ?>" style="text-decoration: none;">
                             <div class="post-img">
                                 <img src="posts/<?php echo $post['post_file']; ?>" alt="No post file" width="97%" height="450px">
                             </div>
+                        </a>                            
                         <?php
                         } ?>
 
@@ -1344,21 +1454,26 @@ if (isset($_REQUEST['other_Profile_page'])) {
                                         } else {
                                             echo "fa-regular fa-heart";
                                         } ?>">
-                                <span class="like-count"><?php if (!empty($likeData['total'])) {
-                                                                echo $likeData['total'];
-                                                            } else {
-                                                                echo "";
-                                                            } ?>
+                                <span class="like-count">
+                                    <?php
+                                    if (!empty($likeData['total'])) {
+                                        echo $likeData['total'];
+                                    } else {
+                                        echo "";
+                                    }
+                                    ?>
                                 </span>
                             </i>
                         </a>
 
                         <a class="comment-post" data-post-id="<?= $post['id']; ?>">
-                            <i class="fa-regular fa-comment"> <span class="comment-count"><?php if (!empty($commentData['total'])) {
-                                                                                                echo $commentData['total'];
-                                                                                            } else {
-                                                                                                echo "";
-                                                                                            } ?></span></i>
+                            <i class="fa-regular fa-comment"> <span class="comment-count">
+                                    <?php if (!empty($commentData['total'])) {
+                                        echo $commentData['total'];
+                                    } else {
+                                        echo "";
+                                    } ?></span>
+                            </i>
                         </a>
                     </div>
                 </div>
@@ -1388,11 +1503,12 @@ if (isset($_REQUEST['other_Profile_page'])) {
                         $ext = explode(".", $myfile);
                         if (strtolower(end($ext)) == "mp4") {
                         } else {
-                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> <?php
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                                            ?>
+                ?> <img src="posts/<?php echo $media_post['post_file'] ?>" width="32.7%"> 
+                <?php
+                        }
+                    }
+                }
+                ?>
             </div>
             <?php
         }
@@ -1440,9 +1556,15 @@ if (isset($_REQUEST['follow_other_profile_id'])) {
     if ($isFollowing) {
         // Unfollow
         mysqli_query($conn, "DELETE FROM twitter_followers WHERE followers = '$opponent_id' AND following = '$userId'");
+        $delete_notification = "DELETE FROM `twitter_notifications` WHERE user_id = '$opponent_id' AND sender_id = '$userId' AND type = 'follow'";
+            $delete_notification_result = mysqli_query($conn, $delete_notification);
     } else {
         // Follow
         mysqli_query($conn, "INSERT INTO twitter_followers(followers, following) VALUES ('$opponent_id','$userId')");
+
+        $insert_notification = "INSERT INTO twitter_notifications(user_id, sender_id, type, message)
+        VALUES ('$opponent_id', '$userId', 'follow', '@$_SESSION[userid] Started to following you.')";
+        $notification = mysqli_query($conn, $insert_notification);
     }
 
     // Recheck relationship status
@@ -1459,8 +1581,8 @@ if (isset($_REQUEST['follow_other_profile_id'])) {
     }
 
     // Counts
-    $following = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $userId"));
-    $followers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $userId"));
+    $following = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE following = $opponent_id"));
+    $followers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM twitter_followers WHERE followers = $opponent_id"));
 
     echo json_encode([
         'following_count' => $following['total'],
@@ -1469,7 +1591,7 @@ if (isset($_REQUEST['follow_other_profile_id'])) {
     ]);
 }
 
-// search 
+// search
 if (isset($_REQUEST['search_input_data'])) {
     $search_data = trim(isset($_POST['search_input_data']) ? $_POST['search_input_data'] : "");
     if ($search_data !== "") {
@@ -1504,8 +1626,118 @@ if (isset($_REQUEST['search_input_data'])) {
             <div style="text-align:center;">
                 <span>Data not found</span>
             </div>
-<?php
+        <?php
         }
+    }
+}
+
+
+// show notifications data  
+if (isset($_REQUEST['other_notifications_show'])) {
+    $login_user_id = $_SESSION['login_user_id'];
+
+    // notification update is ready
+    $isread = "SELECT * FROM `twitter_notifications` WHERE user_id = '$login_user_id'";
+    $update_result = mysqli_query($conn, $isread);
+    while ($row = mysqli_fetch_assoc($update_result)) {
+         $is_read_value = $row['is_read'];
+         if($is_read_value === '0'){
+            $update_query = "UPDATE `twitter_notifications` SET `is_read`='1' WHERE user_id = '$login_user_id'";
+            mysqli_query($conn,$update_query);
+         }
+    }
+
+    
+    $notification_query = "SELECT tn.*, tu.name, tu.username, tu.profile_picture
+                            FROM twitter_notifications tn
+                            JOIN twitter_users tu ON tn.sender_id = tu.id
+                            WHERE tn.user_id = '$login_user_id'
+                            ORDER BY tn.created_at DESC;";
+
+    $userResult = mysqli_query($conn, $notification_query);
+
+    if (mysqli_num_rows($userResult) > 0) {
+        while ($row = mysqli_fetch_assoc($userResult)) {
+            $name = $row['name'];
+            $firstchar = $name[0];
+
+            date_default_timezone_set("Asia/Kolkata");
+            $postTime = new DateTime($row['created_at']);
+            $currentTime = new DateTime();
+
+            $interval = $currentTime->diff($postTime);
+            $years = $interval->y;
+            $months = $interval->m;
+            $weeks = floor($interval->d / 7);
+            $days = $interval->d % 7;
+            $hours = $interval->h;
+            $minutes = $interval->i;
+
+            if ($years > 0) {
+                $output = $years . ' Y';
+            } elseif ($months > 0) {
+                $output = $months . 'M';
+            } elseif ($weeks > 0) {
+                $output = $weeks . 'W';
+            } elseif ($days > 0) {
+                $output = $days . 'd';
+            } elseif ($hours > 0) {
+                $output = $hours . 'h';
+            } elseif ($minutes > 0) {
+                $output = $minutes . 'm';
+            } else {
+                $output = ' Just now';
+            }
+        ?>
+            <div class="post">
+                <div class="like-notification">
+                    <?php
+                    if ($row['type'] == "like") { ?>
+                        <div><img src="image/like.jpg" alt="" width="20" style="margin-top: 7px; margin-right: 7px;"></div>
+                    <?php }
+                    ?>
+                    <?php
+                    if (empty($row['profile_picture'])) { ?>
+                        <div class="like-profile"><?php echo $firstchar; ?>
+                        </div>
+                        <span><?php echo $row['name']; ?></span>
+                            <span> .<?php echo $output; ?></span>
+                           <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
+                    <?php } else { ?>
+                        <div class="like-profile-img">
+                            <img src="profile_pic/<?php echo $row['profile_picture']; ?>" alt="" width="35">
+                            <span style="font-weight: 700; font-size: 16px;"><?php echo $row['name']; ?></span>
+                            <span> .<?php echo $output; ?></span>
+                        </div>
+                        <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
+                    <?php }
+                    ?>
+                </div>
+                <p style="margin-left: 60px;"><?php echo $row['message'] ?></p>
+                <!-- <a href="">
+                    <div>
+                        <img src="posts/" alt="">
+                    </div>
+                </a> -->
+            </div>
+<?php   }
+    }else{ ?>
+        <p class="no-notification">No Notifications</p>
+    <?php }
+}
+
+if (isset($_REQUEST['is_read_notification'])) {
+    $login_user_id = $_SESSION['login_user_id'];
+    
+    $isread_query = "SELECT COUNT(*) as unread_count FROM twitter_notifications 
+                     WHERE user_id = '$login_user_id' AND is_read = 0";
+    
+    $result = mysqli_query($conn, $isread_query);
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $count = $row['unread_count'];
+        echo json_encode(['unread_count' => $count]);
     }
 }
 ?>

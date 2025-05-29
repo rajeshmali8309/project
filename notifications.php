@@ -16,6 +16,10 @@ if(isset($_SESSION["userid"])){ ?>
         .post {
             width: 648px;
         }
+
+        .might-like{
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +48,7 @@ if(isset($_SESSION["userid"])){ ?>
         
         <div class="rightbar">
             <?php 
+              include 'layout/footer.php';
               include 'layout/right_footer.php'; 
             ?>
         </div>

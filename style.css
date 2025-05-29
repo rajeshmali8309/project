@@ -1965,7 +1965,7 @@
 .show-notificatio-count{
     color: rgb(34, 154, 252);
     font-size: 10px;
-    display: block;
+    display: none;
 }
 
 .delete-notification-icon{

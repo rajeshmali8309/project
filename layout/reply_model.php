@@ -24,6 +24,7 @@
                 <input type="hidden" name="user_id" value="<?php echo $userDAta['id']; ?>">
                 <input type="hidden" id="reply-post-id" value=""> 
                 <input type="hidden" id="post-id-val" value=""> 
+                <input type="hidden" id="reply_id_value" value="">
             </div>
 
             <div class="post-options">
