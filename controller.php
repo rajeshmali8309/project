@@ -108,6 +108,23 @@ if (isset($_REQUEST['post_delete_id'])) {
     }
 }
 
+// user comment delete
+if (isset($_REQUEST['comment_delete_id'])) {
+    $Post_delete_id = trim(isset($_POST['comment_delete_id']) ? $_POST['comment_delete_id'] : "");
+
+    $Post_delete_query = "DELETE FROM `twitter_post_comments` WHERE id = '$Post_delete_id'";
+    $deleteResult = mysqli_query($conn, $Post_delete_query);
+    if ($deleteResult) {
+        echo json_encode([
+            'status' => 'success'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'failed'
+        ]);
+    }
+}
+
 // login operation on ajax request
 if (isset($_REQUEST['loginuser'])) {
     $loginData = trim(isset($_POST['userid']) ? $_POST['userid'] : "");
@@ -153,6 +170,7 @@ if (isset($_REQUEST['foryou_data'])) {
     //fetch all users all posts randomaly
     $for_you_query = "SELECT 
                         u.id AS user_id,
+                        u.id,
                         u.name,
                         u.username,
                         u.profile_picture,
@@ -206,7 +224,7 @@ if (isset($_REQUEST['foryou_data'])) {
             $LikeCount = mysqli_query($conn, $Count_query);
             $likeData = mysqli_fetch_assoc($LikeCount);
 
-            //comment Count 
+            //comment Count
             $cmt_Count_query = "SELECT COUNT(*) AS total FROM twitter_post_comments WHERE post_id = $post_Id";
             $cmtCount = mysqli_query($conn, $cmt_Count_query);
             $commentData = mysqli_fetch_assoc($cmtCount);
@@ -222,12 +240,22 @@ if (isset($_REQUEST['foryou_data'])) {
                     <?php if (empty($post['profile_picture'])) { ?>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><span><?php echo $fstChar; ?></span></a>
                     <?php } else {
-                    ?> <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file"></a><?php
-                                                                                                                                                                                                                            } ?>
+                    ?> <a style="text-decoration: none; color:black;"
+                            href="other_user_profile.php?username=<?php echo $post['username']; ?>">
+                            <img src="profile_pic/<?php echo $post['profile_picture']; ?>" alt="no file">
+                        </a><?php
+                        } ?>
                     <p>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>"><b style="color:black;"><?php echo $post['name'] ?> </b></a>
                         <a style="text-decoration: none; color:black;" href="other_user_profile.php?username=<?php echo $post['username']; ?>">@<?php echo $post['username'] ?></a>
                         <b class="user-post-time"><?php echo $output; ?></b>
+                        <?php
+                        if($post['id'] === $_SESSION['login_user_id']){ ?>
+                            <div style="display: inline; margin: auto;" class="delete-post-reply" data-id-post="<?= $post['post_id']; ?>">
+                                <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                            </div>
+                        <?php }
+                        ?>
                     </p>
                 </div>
 
@@ -553,7 +581,7 @@ if (isset($_REQUEST['Profilepage'])) {
     // fetch login userData
     include 'login_user_data.php';
 
-    if ($page === 'Posts' || $page === 'Replies') {
+    if ($page === 'Posts') {
         //fetch user Post for profile page
         $post_fetch_user = "SELECT * FROM `twitter_posts` WHERE `user_id` = $userDAta[id] ORDER BY `id` DESC";
         $result = mysqli_query($conn, $post_fetch_user);
@@ -702,6 +730,15 @@ if (isset($_REQUEST['Profilepage'])) {
     <?php
     }
 
+    // for highlight
+    if ($page === 'Replies') {
+        ?>
+        <div class="highlight-show-Data">
+            <h3>No any Replies on your profile</h3>
+        </div>
+    <?php
+    }
+
     // for Articles
     if ($page === 'Articles') {
     ?>
@@ -726,7 +763,7 @@ if (isset($_REQUEST['Profilepage'])) {
         $media_query = "SELECT * FROM twitter_posts WHERE user_id = $userDAta[id] AND post_file != '' ORDER BY id DESC";
         $media_result = mysqli_query($conn, $media_query);
 
-        if ($media_result->num_rows > 0) {
+        if (mysqli_num_rows($media_result) > 0) {
         ?>
             <div>
                 <?php
@@ -1117,6 +1154,30 @@ if (isset($_REQUEST['profile_page_record'])) {
 if (isset($_REQUEST['user_post_insert'])) {
     $user_id = trim(isset($_POST['user_id']) ? $_POST['user_id'] : "");
     $Description = trim(isset($_POST['index_heppening_input']) ? $_POST['index_heppening_input'] : "");
+    $PostFile = '';
+
+    // for post file
+    if (!empty($_FILES['post_file']['name'])) {
+        $targetDir = 'posts/';
+        $PostFile = time() . '.' . pathinfo($_FILES["post_file"]["name"], PATHINFO_EXTENSION);
+        $targetFile = $targetDir . $PostFile;
+        move_uploaded_file($_FILES["post_file"]["tmp_name"], $targetFile);
+    }
+
+    $sql = "INSERT INTO `twitter_posts`(`user_id`, `post_file`, `description`) VALUES ('$user_id','$PostFile','$Description')";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        echo "Post SuccessFully...!";
+    } else {
+        echo "Post Failed...!";
+    }
+}
+
+// Post insert operation on ajax request
+if (isset($_REQUEST['left_post_insert'])) {
+    $user_id = trim(isset($_POST['user_id']) ? $_POST['user_id'] : "");
+    $Description = trim(isset($_POST['post_description']) ? $_POST['post_description'] : "");
     $PostFile = '';
 
     // for post file
@@ -1688,7 +1749,7 @@ if (isset($_REQUEST['other_notifications_show'])) {
                             FROM twitter_notifications tn
                             JOIN twitter_users tu ON tn.sender_id = tu.id
                             WHERE tn.user_id = '$login_user_id'
-                            ORDER BY tn.created_at DESC;";
+                            ORDER BY tn.created_at DESC";
 
     $userResult = mysqli_query($conn, $notification_query);
 
@@ -1738,14 +1799,18 @@ if (isset($_REQUEST['other_notifications_show'])) {
                         </div>
                         <span><?php echo $row['name']; ?></span>
                             <span> .<?php echo $output; ?></span>
-                           <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
+                           <span class="delete-notification-icon" data-notification-id="<?= $row['id']; ?>">
+                                <i class="fa-solid fa-trash"></i>
+                           </span>
                     <?php } else { ?>
                         <div class="like-profile-img">
                             <img src="profile_pic/<?php echo $row['profile_picture']; ?>" alt="" width="35">
                             <span style="font-weight: 700; font-size: 16px;"><?php echo $row['name']; ?></span>
                             <span> .<?php echo $output; ?></span>
                         </div>
-                        <!-- <span class="delete-notification-icon"><i class="fa-solid fa-trash"></i></span> -->
+                        <span class="delete-notification-icon" data-notification-id="<?= $row['id']; ?>">
+                            <i class="fa-solid fa-trash"></i>
+                        </span>
                     <?php }
                     ?>
                 </div>
@@ -1775,5 +1840,21 @@ if (isset($_REQUEST['is_read_notification'])) {
         $count = $row['unread_count'];
         echo json_encode(['unread_count' => $count]);
     }
+}
+
+if (isset($_REQUEST['notification_delete'])) {
+    $notification_id = $_REQUEST['notification_delete'];
+    
+    $notification_delete_query = "DELETE FROM `twitter_notifications` WHERE id = '$notification_id'";
+    $deleteResult = mysqli_query($conn, $notification_delete_query);
+    if($deleteResult){
+        $status = "success";
+    }else{
+        $status = "failed";
+    }
+
+    echo json_encode([
+        'status' => $status
+    ]);
 }
 ?>

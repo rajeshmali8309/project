@@ -128,6 +128,11 @@ if(isset($_SESSION["userid"])){ ?>
                     $reply_count = mysqli_query($conn, $reply_Count_query);
                     $replydata = mysqli_fetch_assoc($reply_count);
 
+                     // find post id to userid
+                    $userDAta_query = "SELECT * FROM twitter_posts WHERE id = '$post[post_id]'";
+                    $runUserData = mysqli_query($conn, $userDAta_query);
+                    $userData = mysqli_fetch_assoc($runUserData);
+
 
                     ?> 
                     <div class="center-content" id="notifications_data" style="padding: 68px 0px;">
@@ -157,6 +162,14 @@ if(isset($_SESSION["userid"])){ ?>
                                         @<?php echo $post['username'] ?>
                                     </a>
                                     <b class="user-post-time"><?php echo $output; ?></b>
+
+                                    <?php 
+                                    if($post['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $post['comment_id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
 

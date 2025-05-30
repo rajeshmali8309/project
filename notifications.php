@@ -75,6 +75,27 @@ if(isset($_SESSION["userid"])){ ?>
         }
 
         showNotifications();
+
+        // notification delete
+        $(document).on('click', '.delete-notification-icon', function () {
+            var notification_id = $(this).data('notification-id');
+            if (window.confirm("Are you sure you want to delete this Notification?")) {
+                $.ajax({
+                    url: 'controller.php',
+                    method: 'POST',
+                    data: {
+                        "notification_delete": notification_id
+                    },
+                    success: function (Result) {
+                        let response = JSON.parse(Result);
+                        // $("#otpur").html(response.reply_count);
+                        if (response.status === "success") {
+                            showNotifications();
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
 </html>

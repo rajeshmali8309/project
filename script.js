@@ -712,14 +712,14 @@ $(document).ready(function () {
 
     $(".popup-post-file").change(function(){
             $(".errorpost").text("");
-    })
+    });
 
     // Post validation & Post Insert...
     $(document).on("submit", ".popup-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
 
-        if ($(".popup-post-discription").val() === '' && $(".popup-post-file").val() === '') {
+        if ($(".popup-post-discription").val().trim() === '' && $(".popup-post-file").val() === '') {
             $(".errorpost").text("Your Post is Empty...!");
             $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
@@ -730,7 +730,7 @@ $(document).ready(function () {
         if (isValid) {
             var form = $('.popup-post-form')[0];
             var formData = new FormData(form);
-            formData.append('user_post_insert', 'formData');
+            formData.append('left_post_insert', 'formData');
             $.ajax({
                 url: "controller.php",
                 type: "POST",
@@ -764,7 +764,7 @@ $(document).ready(function () {
         event.preventDefault();
         var isValid = true;
 
-        if ($(".left-post-discription").val() === '' && $(".left-post-file").val() === '') {
+        if ($(".left-post-discription").val().trim() === '' && $(".left-post-file").val() === '') {
             $(".errorPost").text("Your Post is Empty...!");
             $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
@@ -1224,8 +1224,6 @@ $(document).ready(function () {
                     },
                     success: function (replyResult) {
                         let response = JSON.parse(replyResult); 
-                        $("#otpur").html(response.reply_count);
-
                         // reply count update
                         if (response.reply_count == 0) {
                             comment_btn.find('.reply-count').text("");

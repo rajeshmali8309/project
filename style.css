@@ -1121,6 +1121,7 @@
 
 .post-discription{
     margin-right: 10px;
+    overflow-wrap: break-word;
 }
 
 .post-img{

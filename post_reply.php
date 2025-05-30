@@ -163,6 +163,13 @@ if(isset($_SESSION["userid"])){ ?>
                                         @<?php echo $post['username'] ?>
                                     </a>
                                     <b class="user-post-time"><?php echo $output; ?></b>
+                                    <?php
+                                    if($post['user_id'] === $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-reply" data-id-post="<?= $post['post_id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
 
@@ -313,6 +320,18 @@ if(isset($_SESSION["userid"])){ ?>
                                     <b class="user-post-time">
                                         <?php echo $commenttime;?>
                                     </b>
+                                    <?php
+                                    if($post['user_id'] === $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    elseif($data['user_id'] === $_SESSION['login_user_id']) { ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                            <i style="color: red; margin-left: 110px;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
  
@@ -372,6 +391,53 @@ if(isset($_SESSION["userid"])){ ?>
     <?php include 'layout/post_model.php'; ?>
     <?php include 'layout/add_comment_model.php'; ?>
     <?php include 'layout/reply_model.php'; ?>
+
+    <script>
+        // delete post
+        $(document).on('click', '.delete-post-reply', function (){
+            var Post_ID = $(this).data('id-post');
+            if (window.confirm("Are you sure you want to delete this post?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "post_delete_id": Post_ID,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href="profile.php";
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+
+        // delete Comment
+        $(document).on('click', '.delete-post-comment', function (){
+            var Comment_id = $(this).data('id-comment');
+            var post_id = $("#send-post-id").val();
+            if (window.confirm("Are you sure you want to delete this Commment?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "comment_delete_id": Comment_id,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href = "post_reply.php?post_id=" + post_id;
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 <?php 

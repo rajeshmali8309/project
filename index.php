@@ -63,6 +63,7 @@ if(isset($_SESSION["userid"])){ ?>
         <div class="rightbar">
             <?php 
               include 'layout/right_footer.php'; 
+              include 'layout/footer.php';
             ?>
         </div>
     </div>
@@ -74,20 +75,41 @@ if(isset($_SESSION["userid"])){ ?>
         $("#home").addClass("sidebar-activepage");
 
         //ajax request for following Data default show
-            $("#following").removeClass("foryou-following-active");
-            $("#for_active").addClass("foryou-following-active");
-            var for_you = "foryou";
-            $.ajax({
-                url: "controller.php",
-                type: 'post',
-                data: {
-                    "foryou_data": for_you
-                },
-                success : function(response){
-                    $(".center-content").html(response);
-                }
-            });
+        $("#following").removeClass("foryou-following-active");
+        $("#for_active").addClass("foryou-following-active");
+        var for_you = "foryou";
+        $.ajax({
+            url: "controller.php",
+            type: 'post',
+            data: {
+                "foryou_data": for_you
+            },
+            success : function(response){
+                $(".center-content").html(response);
+            }
         });
+
+        $(document).on('click', '.delete-post-reply', function (){
+            var Post_ID = $(this).data('id-post');
+            if (window.confirm("Are you sure you want to delete this post?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "post_delete_id": Post_ID,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                $("#for-you").trigger("click");
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+    });
 </script>
 </html>
 <?php }else{
