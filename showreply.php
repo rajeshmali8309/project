@@ -10,7 +10,7 @@ if(isset($_SESSION["userid"])){ ?>
     <title>Notifications / X</title>
     <style>
         .rightbar{
-            margin-right: 58px;
+            margin-right: 85px;
             right: -17px;
         }
         .post {
@@ -47,7 +47,7 @@ if(isset($_SESSION["userid"])){ ?>
         ?>
 
         <div class="center-main">
-            <div class="center-header" style="width: 45.3%; border-bottom: none;">
+            <div class="center-header" style="width: 610px; border-bottom: none;">
                 <div id="Notifications">
                     <span style="font-size: 22px; color: black;">Post</span>
                 </div>
@@ -132,19 +132,25 @@ if(isset($_SESSION["userid"])){ ?>
                     AND likeable_type = 'reply'";
                     $userLiked_query = mysqli_query($conn, $query_liked_user);
 
+                    // find post id to userid
+                    $userDAta_query = "SELECT * FROM twitter_posts WHERE id = '$post[post_id]'";
+                    $runUserData = mysqli_query($conn, $userDAta_query);
+                    $userData = mysqli_fetch_assoc($runUserData);
+
                     ?> 
                     <div class="center-content" id="notifications_data" style="padding: 68px 0px;">
                         <div class="user-post-details">
                             <input type="hidden" id="send-post-id" value="<?php echo $post['post_id']; ?>">
                             <input type="hidden" id="send-comment-id" value="<?php echo $post['comment_id']; ?>">
-                            <input type="hidden" id="send-reply-id" value="<?php echo $post['present_reply_id']; ?>">
+                            <input type="hidden" id="send-reply-id" value="<?php echo $_REQUEST['id']; ?>">
+                            <input type="hidden" id="send-present-reply-id" value="<?php echo $post['present_reply_id']; ?>">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
                                     <a style="text-decoration: none; color:black;"
                                         href="other_user_profile.php?username=<?php echo $post['username']; ?>">
-                                        <span>
-                                            <?php echo $fstChar; ?> 
-                                        </span>
+                                    <span>
+                                        <?php echo $fstChar; ?> 
+                                    </span>
                                 </a>
                                 <?php } else {
                                 ?> 
@@ -161,6 +167,14 @@ if(isset($_SESSION["userid"])){ ?>
                                         @<?php echo $post['username'] ?>
                                     </a>
                                     <b class="user-post-time"><?php echo $output; ?></b>
+
+                                    <?php
+                                    if($post['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto; margin-left: -20px" class="delete-post-comment-reply" data-reply-comment="<?= $post['id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
 
@@ -297,6 +311,14 @@ if(isset($_SESSION["userid"])){ ?>
                                     <b class="user-post-time">
                                         <?php echo $commenttime;?>
                                     </b>
+
+                                    <?php
+                                    if($data['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto; margin-left: -20px" class="delete-post-reply-reply" data-reply-comment="<?= $data['id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
  
@@ -355,6 +377,59 @@ if(isset($_SESSION["userid"])){ ?>
     <?php include 'layout/add_comment_model.php'; ?>
     <?php include 'layout/reply_model.php'; ?>
 </body>
+
+<script>
+    // delete Comment reply
+    $(document).on('click', '.delete-post-comment-reply', function (){
+        var reply_id = $(this).data('reply-comment');
+        var comment_id = $("#send-comment-id").val();
+        var present_reply_id = $("#send-present-reply-id").val();
+        if (window.confirm("Are you sure you want to delete this comment reply?")) {
+            $.ajax({
+                url: "controller.php",
+                type: 'post',
+                data: {
+                    "comment_reply_delete_id": reply_id
+                },
+                success: function (response) {
+                    var deleteresult = JSON.parse(response);
+                    if (deleteresult.status == 'success') {
+                        setTimeout(function () {
+                            if(present_reply_id === ''){
+                                window.location.href = "reply.php?reply=" + comment_id;
+                            }else{
+                                window.location.href = "showreply.php?id=" + present_reply_id;
+                            }
+                        }, 1000);
+                    }
+                }
+            });
+        }
+    });
+
+    // delete reply
+    $(document).on('click', '.delete-post-reply-reply', function (){
+        var reply_id = $(this).data('reply-comment');
+        var parent_reply = $("#send-reply-id").val();
+        if (window.confirm("Are you sure you want to delete this reply?")) {
+            $.ajax({
+                url: "controller.php",
+                type: 'post',
+                data: {
+                    "reply_delete_id": reply_id
+                },
+                success: function (response) {
+                    var deleteresult = JSON.parse(response);
+                    if (deleteresult.status == 'success') {
+                        setTimeout(function () {
+                            window.location.href = "showreply.php?id=" + parent_reply;
+                        }, 1000);
+                    }
+                }
+            });
+        }
+    });
+</script>
 </html>
 <?php 
 }else{

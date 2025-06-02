@@ -188,17 +188,17 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
                                 <?php echo $userDAta['bio']; ?>
                             </p>
                             <p class="show-profile-followers">
-                                <a style="color: black;"
+                                <a style="color: black; text-decoration: none;"
                                     href="follow_list.php?following=<?php echo $userDAta['username'] ?>">
-                                    <span class="other-following-show">
+                                    <span class="other-profile-following-show">
                                         <?php echo $following['total']; ?>
                                     </span>
                                     <span> Following</span>
                                 </a>
                                 
-                                <a style="color: black;"
+                                <a style="color: black; text-decoration: none;"
                                     href="follow_list.php?followers=<?php echo $userDAta['username'] ?>">
-                                    <span class="other-followers-show" style="margin-left: 10px;">
+                                    <span class="other-profile-followers-show" style="margin-left: 10px;">
                                         <?php echo $followers['total']; ?>
                                     </span>
                                     <span> Follower</span>
@@ -220,7 +220,7 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
             <div class="rightbar">
                 <?php
                     include 'layout/footer.php';
-                    include 'layout/right_footer.php'; 
+                    // include 'layout/right_footer.php'; 
                 ?>
             </div>
         </div>

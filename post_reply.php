@@ -10,7 +10,7 @@ if(isset($_SESSION["userid"])){ ?>
     <title>Notifications / X</title>
     <style>
         .rightbar{
-            margin-right: 58px;
+            margin-right: 85px;
             right: -17px;
         }
         .post {
@@ -47,7 +47,7 @@ if(isset($_SESSION["userid"])){ ?>
         ?>
 
         <div class="center-main">
-            <div class="center-header" style="width: 45.3%; border-bottom: none;">
+            <div class="center-header" style="width: 41.3%; border-bottom: none;">
                 <div id="Notifications">
                     <span style="font-size: 22px; color: black;">Post</span>
                 </div>
@@ -322,12 +322,12 @@ if(isset($_SESSION["userid"])){ ?>
                                     </b>
                                     <?php
                                     if($post['user_id'] === $_SESSION['login_user_id']){ ?>
-                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                        <div style="display: inline; margin: auto; margin-left: -50px;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
                                             <i style="color: red;" class="fa-solid fa-trash-can"></i>
                                         </div>
                                     <?php }
                                     elseif($data['user_id'] === $_SESSION['login_user_id']) { ?>
-                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
+                                        <div style="display: inline; margin: auto; margin-left: -50px;" class="delete-post-comment" data-id-comment="<?= $data['comment_id']; ?>">
                                             <i style="color: red; margin-left: 110px;" class="fa-solid fa-trash-can"></i>
                                         </div>
                                     <?php }

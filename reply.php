@@ -10,7 +10,7 @@ if(isset($_SESSION["userid"])){ ?>
     <title>Notifications / X</title>
     <style>
         .rightbar{
-            margin-right: 58px;
+            margin-right: 85px;
             right: -17px;
         }
         .post {
@@ -47,7 +47,7 @@ if(isset($_SESSION["userid"])){ ?>
         ?>
 
         <div class="center-main">
-            <div class="center-header" style="width: 45.3%; border-bottom: none;">
+            <div class="center-header" style="width: 610px; border-bottom: none;">
                 <div id="Notifications">
                     <span style="font-size: 22px; color: black;">Post</span>
                 </div>
@@ -128,7 +128,7 @@ if(isset($_SESSION["userid"])){ ?>
                     $reply_count = mysqli_query($conn, $reply_Count_query);
                     $replydata = mysqli_fetch_assoc($reply_count);
 
-                     // find post id to userid
+                    // find post id to userid
                     $userDAta_query = "SELECT * FROM twitter_posts WHERE id = '$post[post_id]'";
                     $runUserData = mysqli_query($conn, $userDAta_query);
                     $userData = mysqli_fetch_assoc($runUserData);
@@ -144,7 +144,7 @@ if(isset($_SESSION["userid"])){ ?>
                                     <a style="text-decoration: none; color:black;"
                                         href="other_user_profile.php?username=<?php echo $post['username']; ?>">
                                         <span>
-                                            <?php echo $fstChar; ?> 
+                                            <?php echo $fstChar; ?>
                                         </span>
                                 </a>
                                 <?php } else {
@@ -163,9 +163,9 @@ if(isset($_SESSION["userid"])){ ?>
                                     </a>
                                     <b class="user-post-time"><?php echo $output; ?></b>
 
-                                    <?php 
+                                    <?php
                                     if($post['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
-                                        <div style="display: inline; margin: auto;" class="delete-post-comment" data-id-comment="<?= $post['comment_id']; ?>">
+                                        <div style="display: inline; margin: auto; margin-left: -30px;" class="delete-post-comment" data-id-comment="<?= $_REQUEST['reply']; ?>">
                                             <i style="color: red;" class="fa-solid fa-trash-can"></i>
                                         </div>
                                     <?php }
@@ -284,7 +284,7 @@ if(isset($_SESSION["userid"])){ ?>
                         $query_liked_user = "SELECT * FROM twitters_post_likes WHERE user_id = '$useridd' AND liked_id = '$post_Id'
                         AND likeable_type = 'reply'";
                         $userLiked_query = mysqli_query($conn, $query_liked_user);
-
+                        
                         ?>
                         <div class="user-post-details" style="margin-left: 120px;">
                             <div class="comment-information">
@@ -302,6 +302,14 @@ if(isset($_SESSION["userid"])){ ?>
                                     <b class="user-post-time">
                                         <?php echo $commenttime;?>
                                     </b>
+
+                                    <?php
+                                    if($data['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
+                                        <div style="display: inline; margin: auto;" class="delete-post-comment-reply" data-reply-comment="<?= $data['id']; ?>">
+                                            <i style="color: red;" class="fa-solid fa-trash-can"></i>
+                                        </div>
+                                    <?php }
+                                    ?>
                                 </p>
                             </div>
  
@@ -359,6 +367,55 @@ if(isset($_SESSION["userid"])){ ?>
     <?php include 'layout/post_model.php'; ?>
     <?php include 'layout/add_comment_model.php'; ?>
     <?php include 'layout/reply_model.php'; ?>
+
+    <script>
+        // delete Comment
+        $(document).on('click', '.delete-post-comment', function (){
+            var Comment_id = $(this).data('id-comment');
+            var post_id = $("#send-post-id").val();
+            if (window.confirm("Are you sure you want to delete this Commment?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "comment_delete_id": Comment_id,
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href = "post_reply.php?post_id=" + post_id;
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+
+        // delete Comment
+        $(document).on('click', '.delete-post-comment-reply', function (){
+            var reply_id = $(this).data('reply-comment');
+            var post_id = $("#send-post-id").val();
+            var comment_id = $("#send-comment-id").val();
+            if (window.confirm("Are you sure you want to delete this comment reply?")) {
+                $.ajax({
+                    url: "controller.php",
+                    type: 'post',
+                    data: {
+                        "comment_reply_delete_id": reply_id
+                    },
+                    success: function (response) {
+                        var deleteresult = JSON.parse(response);
+                        if (deleteresult.status == 'success') {
+                            setTimeout(function () {
+                                window.location.href = "reply.php?reply=" + comment_id;
+                            }, 1000);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 <?php 

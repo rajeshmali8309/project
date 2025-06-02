@@ -543,14 +543,13 @@ $(document).ready(function () {
             }
         });
 
-        $(document).on("change", ".file_banner", function(){
+        $(document).on("change", "#banner-upload", function(){
             $(".fileerror").text("");
         });
-    });
 
-    $(document).on("click", ".close-edit-form", function () {
-        $("#edit-user-data")[0].reset();
-        $("#edit-profile-modal").fadeOut();
+        $(document).on("change", "#profile-upload", function(){
+            $(".profileerror").text("");
+        });
     });
 
     // start Insert Data using ajax request
@@ -559,7 +558,7 @@ $(document).ready(function () {
         var namepattern = /^[A-Za-z ]{3,20}$/;
         var usernamepattern = /^[a-z0-9_.]{5,15}$/;
         var emailpattern = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,6}$/;
-        let filePatter = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
+        let filePatter = /\.(gif|jpe?g|png)$/i;
         var isValid = true;
 
         if ($(".Name").val() === '') {
@@ -647,13 +646,27 @@ $(document).ready(function () {
             }
         }
 
-        if ($(".file_banner").val() != '') {
-            thisValue = $(".file_banner").val();
-            if (filePatter.test(thisValue)) {
+        if($("#banner-upload").val() === ''){
+            $(".fileerror").text("");
+        }else{
+            var file_value = $("#banner-upload").val();
+            if (filePatter.test(file_value)) {
                 $(".fileerror").text("");
             }else{
-                isValid = false;
                 $(".fileerror").text("please choose a valid file...!");
+                isValid = false;
+            }
+        }
+
+        if($("#profile-upload").val() === ''){
+            $(".profileerror").text("");
+        }else{
+            var profile_value = $("#profile-upload").val();
+            if (filePatter.test(profile_value)) {
+                $(".profileerror").text("");
+            }else{
+                $(".profileerror").text("please choose a valid profile picture...!");
+                isValid = false;
             }
         }
 
@@ -664,7 +677,7 @@ $(document).ready(function () {
         }
 
         if ($("#edit-valid-mail").val() === 'failed') {
-            isValid = false;
+            isValid = false
         }
 
         if ($("#edit-valid-username").val() === 'failed') {
@@ -692,6 +705,22 @@ $(document).ready(function () {
             }
         });
     }
+
+    //remove banner
+    $(document).on("click", ".remove-banner", function () {
+        if (window.confirm("Are you sure you want to remove this cover picture?")) {
+            $.ajax({
+                url: "controller.php",
+                type: "POST",
+                data: {
+                    "remove_profile_bannner": "remove",
+                },
+                success: function (response) {
+                    $(".banner").html(response);
+                }
+            });
+        }
+    });
 
     // Open post-btn model 
     $(document).on("click", ".post-btn", function () {
@@ -1112,8 +1141,8 @@ $(document).ready(function () {
                 let response = JSON.parse(followResult);
 
                 // Update counts (optional)
-                $(".other-followers-show").text(response.followers_count);
-                $(".other-following-show").text(response.following_count);
+                $(".other-profile-followers-show").text(response.followers_count);
+                $(".other-profile-following-show").text(response.following_count);
 
                 // Update button label and class
                 other_follow_button.removeClass("follow_back other-user_follow-btn").text("Follow");

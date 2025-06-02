@@ -79,7 +79,8 @@ if(isset($_SESSION["userid"])){ ?>
 
         <div class="rightbar">
             <?php 
-              include 'layout/right_footer.php';
+            //   include 'layout/right_footer.php';
+            include 'layout/footer.php';
             ?>
         </div>
     </div>

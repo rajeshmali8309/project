@@ -51,6 +51,12 @@ if (isset($_SESSION["userid"])) { ?>
             .search-box {
                 margin-left: 670px;
             }
+
+            .profileerror{
+                color: red;
+                margin-top: 0px;
+                padding-top: 0px;
+            }
         </style>
     </head>
 
@@ -88,6 +94,19 @@ if (isset($_SESSION["userid"])) { ?>
         }
 
         profilepage();
+
+        $(document).on("click", ".close-edit-form", function () {
+            if($("#form-discard").val()=== '1'){
+                if (window.confirm("Discard changes? This can’t be undone and you’ll lose your changes.")) {
+                    $("#edit-user-data")[0].reset();
+                    $("#edit-profile-modal").fadeOut();
+                    profilepage();
+                }
+            }else{
+                    $("#edit-user-data")[0].reset();
+                    $("#edit-profile-modal").fadeOut();
+                }
+        });
 
         $(document).ready(function() {
             // start profile page fetch Data using ajax

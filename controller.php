@@ -91,6 +91,31 @@ if (isset($_REQUEST['edit_username_exits'])) {
     }
 }
 
+// remove profile picture and update
+if (isset($_REQUEST['remove_profile_bannner'])) {
+    $remove_banner_user = trim(isset($_SESSION['login_user_id']) ? $_SESSION['login_user_id'] : "");
+
+    $user_query = "SELECT * FROM twitter_users WHERE id = $remove_banner_user";
+    $user_details = mysqli_query($conn, $user_query);
+    $userinfo = mysqli_fetch_assoc($user_details);
+    if($userinfo){ ?>
+            <span class="icon" onclick="document.getElementById('banner-upload').click();">+</span>
+            <span class="fileerror"></span>
+            <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
+            <input type="hidden" id="form-discard" value="1">
+     <?php }
+        
+    // if ($remove_result) {
+    //     echo json_encode([
+    //         'status' => 'success'
+    //     ]);
+    // } else {
+    //     echo json_encode([
+    //         'status' => 'failed'
+    //     ]);
+    // }
+}
+
 // user post delete
 if (isset($_REQUEST['post_delete_id'])) {
     $Post_delete_id = trim(isset($_POST['post_delete_id']) ? $_POST['post_delete_id'] : "");
@@ -114,6 +139,38 @@ if (isset($_REQUEST['comment_delete_id'])) {
 
     $Post_delete_query = "DELETE FROM `twitter_post_comments` WHERE id = '$Post_delete_id'";
     $deleteResult = mysqli_query($conn, $Post_delete_query);
+    if ($deleteResult) {
+        echo json_encode([
+            'status' => 'success'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'failed'
+        ]);
+    }
+}
+
+// user comment reply delete
+if (isset($_REQUEST['comment_reply_delete_id'])) {
+    $reply_ID = trim(isset($_POST['comment_reply_delete_id']) ? $_POST['comment_reply_delete_id'] : "");
+    $reply_delete_query = "DELETE FROM `twitter_post_comments_reply` WHERE id = '$reply_ID'";
+    $deleteResult = mysqli_query($conn, $reply_delete_query);
+    if ($deleteResult) {
+        echo json_encode([
+            'status' => 'success'
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'failed'
+        ]);
+    }
+}
+
+// user comment reply delete
+if (isset($_REQUEST['reply_delete_id'])) {
+    $reply_ID = trim(isset($_POST['reply_delete_id']) ? $_POST['reply_delete_id'] : "");
+    $reply_delete_query = "DELETE FROM `twitter_post_comments_reply` WHERE id = '$reply_ID'";
+    $deleteResult = mysqli_query($conn, $reply_delete_query);
     if ($deleteResult) {
         echo json_encode([
             'status' => 'success'
@@ -973,7 +1030,7 @@ if (isset($_REQUEST['profile_page_record'])) {
                     <span class="first_char"><?php echo $_SESSION['firstchr'] ?></span>
                 <?php } else {
                 ?> <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" id="profile-dp-show" alt="no file"><?php
-                                                                                                                        } ?>
+                } ?>
                 <button id="edit-profile-btn">Edit profile</button>
                 <div class="user-profile-info">
                     <h3><?php echo $userDAta['name'] ?></h3>
@@ -1079,23 +1136,23 @@ if (isset($_REQUEST['profile_page_record'])) {
                 </div>
 
                 <!-- for user profile_banner -->
-                <?php
-                if (empty($userDAta['cover_picture'])) { ?>
-                    <div class="banner">
-                        <span class="icon" onclick="document.getElementById('banner-upload').click();">+</span>
-                        <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
-                    </div>
-                <?php } else { ?>
-                    <div class="banner">
-                        <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
-                        <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
-                        <!-- <span class="remove-banner">Remove</span> -->
-                        <span class="fileerror"></span>
-                        <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
-                        <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
-                    </div>
-                <?php }
-
+                    <?php
+                    if (empty($userDAta['cover_picture'])) { ?>
+                        <div class="banner">
+                            <span class="icon" onclick="document.getElementById('banner-upload').click();">+</span>
+                            <span class="fileerror"></span>
+                            <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
+                        </div>
+                    <?php } else { ?>
+                        <div class="banner">
+                            <img src="profile_banner/<?php echo $userDAta['cover_picture']; ?>" alt="No banner" width="100%" height="100%">
+                            <i class="icon" style="color: black;" onclick="document.getElementById('banner-upload').click();">+</i>
+                            <span class="remove-banner">Remove</span>
+                            <span class="fileerror"></span>
+                            <input type="file" name="profile_banner" accept="image/*" id="banner-upload">
+                            <input type="hidden" name="profile_cover" class="file_banner" value="<?php echo $userDAta['cover_picture']; ?>">
+                        </div>
+                    <?php }
                 // for user profile_picture
                 if (empty($userDAta['profile_picture'])) { ?>
                     <div class="profile-pic">
@@ -1103,6 +1160,7 @@ if (isset($_REQUEST['profile_page_record'])) {
                         <i class="icon" style="color: black;" onclick="document.getElementById('profile-upload').click();">+</i>
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                     </div>
+                    <span class="profileerror"></span>
                 <?php } else { ?>
                     <div id="dp-pic" class="profile-pic">
                         <img src="profile_pic/<?php echo $userDAta['profile_picture']; ?>" class="icon" alt="No-dp" width="80">
@@ -1110,6 +1168,7 @@ if (isset($_REQUEST['profile_page_record'])) {
                         <input type="file" name="profile_pic" accept="image/*" id="profile-upload">
                         <input type="hidden" name="profile_picture" value="<?php echo $userDAta['profile_picture']; ?>">
                     </div>
+                    <span class="profileerror"></span>
                 <?php }
                 ?>
                 <!-- <span>choose a valid file</span> -->
@@ -1800,7 +1859,7 @@ if (isset($_REQUEST['other_notifications_show'])) {
                         <span><?php echo $row['name']; ?></span>
                             <span> .<?php echo $output; ?></span>
                            <span class="delete-notification-icon" data-notification-id="<?= $row['id']; ?>">
-                                <i class="fa-solid fa-trash"></i>
+                                <i class="fa-solid fa-trash" style="color: red;"></i>
                            </span>
                     <?php } else { ?>
                         <div class="like-profile-img">
@@ -1809,7 +1868,7 @@ if (isset($_REQUEST['other_notifications_show'])) {
                             <span> .<?php echo $output; ?></span>
                         </div>
                         <span class="delete-notification-icon" data-notification-id="<?= $row['id']; ?>">
-                            <i class="fa-solid fa-trash"></i>
+                            <i class="fa-solid fa-trash" style="color: red;"></i>
                         </span>
                     <?php }
                     ?>
