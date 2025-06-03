@@ -542,7 +542,11 @@ if (isset($_REQUEST['following_data'])) {
             </div>
             <?php
         }
-    }
+    } else { ?>
+        <div class="post">
+            <p style="text-align: center;">No Following Data</p>
+        </div>
+    <?php }
 }
 
 //user follow unfollow...
@@ -775,7 +779,11 @@ if (isset($_REQUEST['Profilepage'])) {
                 </div>
         <?php
             }
-        }
+        }else{ ?>
+            <div class="highlight-show-Data">
+                <h3>No any posts on your profile</h3>
+            </div>
+        <?php }
     }
 
     // for highlight
@@ -838,7 +846,11 @@ if (isset($_REQUEST['Profilepage'])) {
             ?>
             </div>
     <?php
-        }
+        } else { ?> 
+        <div class="highlight-show-Data">
+            <h3>No any media post on your profile</h3>
+        </div>
+        <?php }
     }
 }
 
@@ -1638,7 +1650,7 @@ if (isset($_REQUEST['other_Profile_page'])) {
         } else {
             ?>
             <div class="highlight-show-Data">
-                <h3>No any post on your profile</h3>
+                <h3>No post in this profile</h3>
             </div>
         <?php
         }
@@ -1667,7 +1679,11 @@ if (isset($_REQUEST['other_Profile_page'])) {
                 ?>
             </div>
             <?php
-        }
+        } else { ?>
+            <div class="highlight-show-Data">
+                <h3>No media in this profile</h3>
+            </div>
+        <?php }
     }
 }
 

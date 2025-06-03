@@ -156,7 +156,6 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
                     </div>
 
                     <div class="post" id="profile-dp-show">
-                        <!-- <span class="first_char">R</span> -->
                         <?php if (empty($userDAta['profile_picture'])) { ?>
                             <span class="first_char">
                                 <?php echo $Userfirstchar ?>
@@ -178,8 +177,7 @@ if (isset($_SESSION["userid"]) && isset($_REQUEST['username'])) {
                                 <?php echo $userDAta['name']; ?>
                             </h3>
                             <input id="other-userid" type="hidden" value="<?php echo $userDAta['id']; ?>">
-                            <p>@
-                                <?php echo $userDAta['username']; ?>
+                            <p>@<?php echo $userDAta['username']; ?>
                             </p>
                             <p><i class="fa-solid fa-calendar-days"></i>
                                 <?php echo "Joined " . date("F Y", strtotime($userDAta['join_date'])); ?>
