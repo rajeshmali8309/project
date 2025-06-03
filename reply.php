@@ -139,6 +139,7 @@ if(isset($_SESSION["userid"])){ ?>
                         <div class="user-post-details">
                             <input type="hidden" id="send-post-id" value="<?php echo $post['post_id']; ?>">
                             <input type="hidden" id="send-comment-id" value="<?php echo $_REQUEST['reply']; ?>">
+                            <input type="hidden" value="openComment" class="forcommentOpen">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
                                     <a style="text-decoration: none; color:black;"
@@ -305,7 +306,7 @@ if(isset($_SESSION["userid"])){ ?>
 
                                     <?php
                                     if($data['user_id'] == $_SESSION['login_user_id'] || $userData['user_id'] == $_SESSION['login_user_id']){ ?>
-                                        <div style="display: inline; margin: auto;" class="delete-post-comment-reply" data-reply-comment="<?= $data['id']; ?>">
+                                        <div style="display: inline; margin: auto; margin-left: -30px;" class="delete-post-comment-reply" data-reply-comment="<?= $data['id']; ?>">
                                             <i style="color: red;" class="fa-solid fa-trash-can"></i>
                                         </div>
                                     <?php }

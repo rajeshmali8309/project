@@ -736,24 +736,38 @@ $(document).ready(function () {
     });
 
     $(".popup-post-discription").focus(function(){
-            $(".errorpost").text("");
+            $(".error-post").text("");
     });
 
     $(".popup-post-file").change(function(){
-            $(".errorpost").text("");
+            $(".error-post").text("");
     });
 
     // Post validation & Post Insert...
     $(document).on("submit", ".popup-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
+        var filePattern = /\.(gif|jpe?g|png|mp4)$/i;
 
         if ($(".popup-post-discription").val().trim() === '' && $(".popup-post-file").val() === '') {
-            $(".errorpost").text("Your Post is Empty...!");
-            $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+            $(".error-post").text("Your Post is Empty...!");
+            $(".error-post").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
             isValid = false;
         } else {
-            $(".errorpost").text("");
+            $(".error-post").text("");
+        }
+
+        if($(".popup-post-file").val() === ''){
+            
+        }else{
+            var profile_value = $(".popup-post-file").val();
+            if (filePattern.test(profile_value)) {
+                $(".error-post").text("");
+            }else{
+                $(".error-post").text("please choose a valid post file...!");
+                $(".error-post").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                isValid = false;
+            }
         }
 
         if (isValid) {
@@ -777,6 +791,7 @@ $(document).ready(function () {
                         $(".popup-post-form")[0].reset();
                         $("#leftcharCountpost").text("");
                         $("#post-modal-overlay").fadeOut(300);
+                        $("#for-you").trigger("click");
                         profilepage();
                     }, 1500);
                 }
@@ -788,10 +803,15 @@ $(document).ready(function () {
         $(".errorPost").text("");
     });
 
+    $(document).on("change", ".left-post-file", function(){
+        $(".errorPost").text("");
+    });
+
     // Post validation & Post Insert...
     $(document).on("submit", ".left-post-form", function (event) {
         event.preventDefault();
         var isValid = true;
+        let filePattern = /\.(gif|jpe?g|png|mp4)$/i;
 
         if ($(".left-post-discription").val().trim() === '' && $(".left-post-file").val() === '') {
             $(".errorPost").text("Your Post is Empty...!");
@@ -799,6 +819,19 @@ $(document).ready(function () {
             isValid = false;
         } else {
             $(".errorPost").text("");
+        }
+
+        if($(".left-post-file").val() === ''){
+            
+        }else{
+            var profile_value = $(".left-post-file").val();
+            if (filePattern.test(profile_value)) {
+                $(".errorPost").text("");
+            }else{
+                $(".errorPost").text("please choose a valid post file...!");
+                $(".errorPost").css({ "color": "red", "fontSize": "12px", "font-weight": "500" });
+                isValid = false;
+            }
         }
 
         if (isValid) {
@@ -821,6 +854,7 @@ $(document).ready(function () {
                         $('.success-msg').html("");
                         $(".left-post-form")[0].reset();
                         $("#charcount").text("");
+                        $("#for-you").trigger("click");
                         profilepage();
                     }, 1500);
                 }
@@ -954,6 +988,7 @@ $(document).ready(function () {
         e.preventDefault();
         var post_Id = $("#comment-post-id").val();
         var comment_val = $("#post_comment").val();
+        var openPostValue = $(".forpostOpen").val();
         var comment_btn = $('.comment-post[data-post-id="' + post_Id + '"]');
 
         if(comment_val === ''){
@@ -978,6 +1013,9 @@ $(document).ready(function () {
                         comment_btn.find('.comment-count').text(response.comment_count);
                     }
                     $("#post-comment-modal-overlay").fadeOut(300);
+                    if(openPostValue === 'openPost'){
+                        window.location.href="post_reply.php?post_id="+post_Id;
+                    }
                 }
             });
         }
@@ -1234,9 +1272,10 @@ $(document).ready(function () {
 
         if($("#reply_id_value").val()=== "reply"){
             var commentID = $("#send-comment-id").val();
-            var opponent_id = $(".send_opponent_id");
             var replyID = $("#reply-post-id").val();
             var comment_btn = $('.reply-comment-post[data-reply-id="' + replyID + '"]');
+            var id_reply = $("#send-reply-id").val();
+            var openReplyValue = $(".forreplyOpen").val();
             if(comment_val === ''){
                 $("#errorreplyPost").text("your reply is empty...!");
             }else{
@@ -1260,12 +1299,16 @@ $(document).ready(function () {
                             comment_btn.find('.reply-count').text(response.reply_count);
                         }
                         $("#post-reply-modal-overlay").fadeOut(300);
+                        if(openReplyValue === 'openreply'){
+                            window.location.href="showreply.php?id="+id_reply;
+                        }
                     }
                 });
             }
         }else{
             var commentID = $("#reply-post-id").val();
             var comment_btn = $('.reply-post[data-comment-id="' + commentID + '"]');
+            var openCommentValue = $(".forcommentOpen").val();
             if(comment_val === ''){
                 $("#errorreplyPost").text("your reply is empty...!");
             }else{
@@ -1290,6 +1333,9 @@ $(document).ready(function () {
                             comment_btn.find('.reply-count').text(response.reply_count);
                         }
                         $("#post-reply-modal-overlay").fadeOut(300);
+                        if(openCommentValue === 'openComment'){
+                            window.location.href="reply.php?reply="+commentID;
+                        }
                     }
                 });
             }

@@ -28,7 +28,7 @@
                 <span class="extra-input"><img src="image/schedule.png" width="20"></span>
                 <span class="extra-input"><img src="image/location.png" width="20"></span>
                 <button id="left-post-btn" type="submit" class="disabled">Post</button>
-                <p class="errorpost"></p>
+                <p class="error-post"></p>
                 <h4 class="post-success-msg"></h3>
             </div>
         </form>

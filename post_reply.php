@@ -140,6 +140,7 @@ if(isset($_SESSION["userid"])){ ?>
                         <div class="user-post-details">
                             <input type="hidden" class="send_opponent_id" value="<?php echo $post['user_id'];?>">
                             <input type="hidden" id="send-post-id" value="<?php echo $_REQUEST['post_id']; ?>">
+                            <input type="hidden" value="openPost" class="forpostOpen">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
                                     <a style="text-decoration: none; color:black;"

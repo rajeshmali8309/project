@@ -226,18 +226,18 @@ if (isset($_REQUEST['foryou_data'])) {
 
     //fetch all users all posts randomaly
     $for_you_query = "SELECT 
-                        u.id AS user_id,
-                        u.id,
-                        u.name,
-                        u.username,
-                        u.profile_picture,
-                        p.id AS post_id,
-                        p.post_file,
-                        p.description,
-                        p.created_at
-                    FROM twitter_posts p
-                    JOIN twitter_users u ON p.user_id = u.id
-                    ORDER BY RAND()";
+                    u.id AS user_id,
+                    u.id,
+                    u.name,
+                    u.username,
+                    u.profile_picture,
+                    p.id AS post_id,
+                    p.post_file,
+                    p.description,
+                    p.created_at
+                FROM twitter_posts p
+                JOIN twitter_users u ON p.user_id = u.id
+                ORDER BY p.created_at DESC";
 
     $result = mysqli_query($conn, $for_you_query);
 

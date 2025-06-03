@@ -144,6 +144,7 @@ if(isset($_SESSION["userid"])){ ?>
                             <input type="hidden" id="send-comment-id" value="<?php echo $post['comment_id']; ?>">
                             <input type="hidden" id="send-reply-id" value="<?php echo $_REQUEST['id']; ?>">
                             <input type="hidden" id="send-present-reply-id" value="<?php echo $post['present_reply_id']; ?>">
+                            <input type="hidden" value="openreply" class="forreplyOpen">
                             <div class="post-information">
                                 <?php if (empty($post['profile_picture'])) { ?>
                                     <a style="text-decoration: none; color:black;"

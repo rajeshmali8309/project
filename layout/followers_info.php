@@ -1,6 +1,7 @@
 <?php
 $loginUserData = null;
 $otherUsers = [];
+$profile_username = "";
 
 while ($user = mysqli_fetch_assoc($following_result)) {
     if ($user['id'] == $loginUserid) {
@@ -71,4 +72,5 @@ foreach ($otherUsers as $user) {
             <?= $buttonLabel ?>
         </button>
     </div>
-<?php } ?>
+<?php }
+?>
